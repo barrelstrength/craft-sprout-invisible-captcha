@@ -1,0 +1,154 @@
+{% import "_includes/forms" as forms %}
+
+{# Define the plugin name to use in the description or use generic sentance #}
+{% set plugin = craft.invisiblecaptcha %}
+
+{% block content %}
+
+	<p>
+		{{ plugin.getName() }} provides several user-friendly methods to protect your forms from vile spammers and evil robots.
+	</p>
+
+	<hr>
+	
+	<p>
+		Select your default Invisible Captcha security checks to protect your forms from spam
+	</p>
+
+	{# 
+		settings.captchaMethod seems to be returning a full array of all the settings
+		not just the selected settings.... what's up with that?  How do we just get the selected settings?
+	
+	 	{{ settings.captchaMethod }}
+		{% for method in settings.captchaMethod %}
+	
+		{% endfor %}
+ 	#}
+
+	<div class="field first">
+			<div class="checkbox-select">
+			<div class="method-origin">
+			
+				<label>
+					<input type="checkbox" value="origin" name="captchaMethod[]" {% if plugin.isMethodSet('origin') %}checked{% endif %}>
+					Require web-based form submissions (Origin)
+				</label> 
+				<span class="more-info">?</span>
+				<div class="note">
+					<p>Some robots don't even bother to open a web browser. The <b>Origin</b> spam prevention method checks to see if the user submitting the form matches the browser (?).  If it does not, the submission is treated as spam and denied.</p>
+
+					<p><b>Note:</b> This method should not have any chance for a regular user to get denied from submitting your form.</p>
+				</div>
+
+			</div>
+			<div class="option method-honeypot">
+
+				<label>
+					<input type="checkbox" value="honeypot" name="captchaMethod[]" {% if plugin.isMethodSet('honeypot') %}checked{% endif %}>
+					Block form submissions by robots who auto-fill all of your form fields (Honeypot) 
+				</label>
+				<span class="more-info">?</span>
+				<div class="note">
+					<p>Many robots fill out every single form field before they submit.  The honeypot method of spam prevention creates a hidden field that should not be filled in by a user on your site because they will never see the field or know it exists.  When a robot automatically fills in the field and submits the form, the form submission will be denied.</p>
+
+					<p><b>Note:</b> Some screen readers will see this hidden field.  We will clearly label the hidden field with a message that says to a user with a screen reader to not add anything to the honeypot form field.</p>
+				</div>
+
+			</div>
+				<div class="method method-time">
+
+						<label>
+							<input type="checkbox" value="time" class="time" name="captchaMethod[]" {% if plugin.isMethodSet('time') %}checked{% endif %}>
+							Require minimum time to fill out your form  (Time-based)
+						</label>
+
+						<span class="more-info">?</span>
+						<div class="note">
+							<p>The <b>Time-based</b> spam prevention method protects against robots who submit forms quicker than humans could.</p>  
+
+							<p><em>Note: If a human does fill out the form too quickly, it will be blocked as spam, so be sure to set this number to a reasonable amount of seconds.  4 or 5 seconds is usually enough to weed out the majority of spam bots, while letting actual humans submit forms successfully.</em></p>
+						</div>
+
+				</div>
+
+				<div class="sub-settings" style="display:none;">
+					{# Should only display if using FULL or TIME captcha methods #}
+					{{ forms.textField({
+						id:				"methodOptions[elapsedTime]",
+						name:			"methodOptions[elapsedTime]",
+						label:			"Minimum time to submit form"|t,
+						instructions:	"This is the minimum time in seconds a user should take to fill out all form fields and hit submit."|t,
+						value:			plugin.getMethodOption('elapsedTime'),
+						autofocus:		false,
+						errors:			""
+					}) }}
+				</div>
+
+			</div>
+	</div>
+
+	<hr>
+
+	<p style="position:absolute;right:30px;bottom:0px;font-size:11px;">
+		<a href="http://barrelstrengthdesign.com" title="Barrel Strength" target="_blank"style="font-weight:bold;color:#999;">{{ plugin.getName() }}</a> {{ plugin.getVersion() }} | Designed by
+		<a href="http://barrelstrengthdesign.com" title="Barrel Strength" target="_blank" style="font-weight:bold;color:#999;">(Barrel Strength)</a>
+	</p>
+
+{% endblock %}
+
+{% set invisibleCaptchaJs %}
+   $('.time').on('change', function() {
+   	if (this.checked)
+ 		{
+ 			$('.sub-settings').slideDown('fast')
+ 		}
+ 		else
+ 		{
+ 			$('.sub-settings').slideUp('fast')
+ 		}
+	});
+	$('.more-info').on('click', function() {
+		$(this).next().slideToggle();
+	});
+
+{% endset %}
+
+{% set invisibleCaptchaCss %}
+	#main {
+		padding-bottom: 50px;
+	}
+	div.sub-settings {
+		margin-left: 20px;
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+ 	.checkbox-select p {
+		margin-top: 0;
+	}
+	.more-info {
+		display:inline-block;
+		background-color: #ccc;
+		color:#fff;
+		width:14px;
+		height:14px;
+		font-size:10px;
+		font-weight:bold;
+		text-align: center;
+		line-height: 14px;
+		cursor:pointer;
+		border-radius: 3px;
+		vertical-align: text-top;
+		margin-left:3px;
+	}
+	.note {
+		background-color:#ffd;
+		display: none;
+		margin-bottom:10px;
+		margin-top:5px;
+		margin-left: 16px;
+		padding:10px;
+	}
+{% endset %}
+
+{% includeJs invisibleCaptchaJs %}
+{% includeCss invisibleCaptchaCss %}

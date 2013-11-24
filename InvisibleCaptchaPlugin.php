@@ -10,7 +10,7 @@ class InvisibleCaptchaPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-		return '1.0';
+		return '0.5.0';
 	}
 
 	public function getDeveloper()

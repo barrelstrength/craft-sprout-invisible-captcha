@@ -34,7 +34,8 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	{
 		return array(
 			'captchaMethod'	=> array( AttributeType::String, 'default' => 'full'),
-			'methodOptions'	=> array( AttributeType::Mixed, 'default' => array('elapsedTime'=>5) )
+			'methodOptions'	=> array( AttributeType::Mixed, 'default' => array('elapsedTime'=>5) ),
+			'logFailedSubmissions'	=> array( AttributeType::String ),
 		);
 	}
 
@@ -69,6 +70,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		craft()->sproutInvisibleCaptcha->verifySubmission();
 	}
 
+	// @TODO - what is this for?
 	public function verifyCaptchaSubmission()
 	{
 		return craft()->sproutInvisibleCaptcha->verifySubmission();
@@ -79,6 +81,10 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 // Change Log
 //------------------------------------------------------------
 /*
+
+v0.5.2
+Added: Log now records which tests were failed
+Added: Logging can be turned on or off in plugin settings
 
 v0.5.1
 Added: Add sproutinvisiblecaptcha_log table
@@ -91,4 +97,4 @@ Fixed: rejectSubmission() function now tries to redirect in the following
 v0.5.0
 Begin tracking version numbers
 
-/*
+*/

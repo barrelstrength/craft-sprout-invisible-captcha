@@ -89,6 +89,19 @@
 
 	<hr>
 
+	<h3>Log failed submissions in the database</h3>
+
+		{{ forms.lightswitch({
+		  onLabel:  "On",
+		  offLabel: "Off",
+		  name:     "logFailedSubmissions",
+		  on:       (settings.logFailedSubmissions is defined) 
+		  						? settings.logFailedSubmissions 
+		  						: ""
+		}) }}
+
+	<hr>
+
 	<p style="position:absolute;right:30px;bottom:0px;font-size:11px;">
 		<a href="http://barrelstrengthdesign.com" title="Barrel Strength" target="_blank"style="font-weight:bold;color:#999;">{{ plugin.getName() }}</a> {{ plugin.getVersion() }} | Designed by
 		<a href="http://barrelstrengthdesign.com" title="Barrel Strength" target="_blank" style="font-weight:bold;color:#999;">(Barrel Strength)</a>

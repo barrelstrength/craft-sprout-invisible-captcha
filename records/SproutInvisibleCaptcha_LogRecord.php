@@ -11,8 +11,11 @@ class SproutInvisibleCaptcha_LogRecord extends BaseRecord
     protected function defineAttributes()
     {
         return array(
-            'postData'		=> array(AttributeType::Mixed),
-            'ipAddress'		=> array(AttributeType::String)
+            'timeMethodFailed'      => array(AttributeType::Bool),
+            'honeypotMethodFailed'  => array(AttributeType::Bool),
+            'originMethodFailed'    => array(AttributeType::Bool),
+            'postData'              => array(AttributeType::Mixed),
+            'ipAddress'             => array(AttributeType::String)
         );
     }
 

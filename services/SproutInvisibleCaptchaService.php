@@ -22,6 +22,12 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		self::METHOD_HONEYPOT => self::METHOD_HONEYPOT_STRING
 	);
 
+	// Used to record failed submissions when logging is enabled
+	private $_originMethodFailed		= 0;
+	private $_honeypotMethodFailed	= 0;
+	private $_timeMethodFailed			= 0;
+
+
 	/**
 	 * getProtection()
 	 * This method will generate the fields for the spam guard during a GET request
@@ -119,7 +125,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 
 		// 4. No __METHOD no validation
 		if ($method) {
-			if ( $this->spammySubmission($method) ) {
+			if ( $this->spammySubmission($method) ) {				
 				return $this->rejectSubmission();
 			}
 		}
@@ -185,7 +191,16 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 
 		// Flag it as a spammy submission based on time
 		// @TODO: May convert the minElapsedTime into a global setting
-		return (bool) ($diff > $min );
+		$verified = (bool) ($diff > $min );
+		if ($verified)
+		{
+			return true;
+		}
+		else
+		{
+			$this->_timeMethodFailed = 1;
+			return false;
+		}
 	}
 
 	//-------------------------------------------------------------------------------
@@ -202,6 +217,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 
 		// Run originating domain check
 		if ( ! $uahome || $uahome != $this->getDomainHash() ) {
+			$this->_originMethodFailed = 1;
 			return false;
 		}
 
@@ -216,6 +232,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	{
 		// The honeypot field must be left blank
 		if ( craft()->request->getPost('chp') ) {
+			$this->_honeypotMethodFailed = 1;
 			return false;
 		}
 
@@ -278,25 +295,33 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	//-------------------------------------------------------------------------------
 
 	protected function rejectSubmission()
-	{
+	{	
 
-		// @TODO - make this optional with a setting
-		// @TODO - can we also save what test failed?
-		// Log our rejected submission so we can see what's being blocked
-		$model = new SproutInvisibleCaptcha_LogModel();
+		$settings = craft()->plugins->getPlugin('sproutinvisiblecaptcha')->getSettings();
+		
+		// Log failed submissions if enabled
+		if ( $settings->logFailedSubmissions == 'y' )
+		{
+			// Log our rejected submission so we can see what's being blocked
+			$model = new SproutInvisibleCaptcha_LogModel();
 
-		$attributes['postData'] 	= json_encode($_POST);
-		$attributes['ipAddress'] 	= $_SERVER["REMOTE_ADDR"];
+			$attributes['postData'] 	= json_encode($_POST);
+			$attributes['ipAddress'] 	= $_SERVER["REMOTE_ADDR"];
+			$attributes['originMethodFailed'] 		= $this->_originMethodFailed;
+			$attributes['honeypotMethodFailed'] 	= $this->_honeypotMethodFailed;
+			$attributes['timeMethodFailed'] 			= $this->_timeMethodFailed;
 
-		$model->setAttributes($attributes);
+			$model->setAttributes($attributes);
 
-		$logRecord = SproutInvisibleCaptcha_LogRecord::model();
-		$record = $logRecord->create();
+			$logRecord = SproutInvisibleCaptcha_LogRecord::model();
+			$record = $logRecord->create();
 
-		$record->setAttributes($model->getAttributes(), false);
+			$record->setAttributes($model->getAttributes(), false);
 
-		// @TODO - let this fail silently for now
-		$record->save();
+			// Let's assume this works.  If not, carry on.
+			// No need to disrupt the user experience
+			$record->save();
+		}
 		
 		//------------------------------------------------------------
 

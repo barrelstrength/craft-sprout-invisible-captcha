@@ -71,15 +71,17 @@
 
 				</div>
 
-				<div class="sub-settings" style="display:none;">
+				{% set elapsedTime = plugin.getMethodOption('elapsedTime') %}
+
+				<div class="sub-settings" {% if not elapsedTime %}style="display:none;"{% endif %}>
 					{# Should only display if using FULL or TIME captcha methods #}
 					{{ forms.textField({
 						id:				"methodOptions[elapsedTime]",
 						name:			"methodOptions[elapsedTime]",
 						label:			"Minimum time to submit form"|t,
 						instructions:	"This is the minimum time in seconds a user should take to fill out all form fields and hit submit."|t,
-						value:			plugin.getMethodOption('elapsedTime'),
-						autofocus:		false,
+						value:			elapsedTime,
+						autofocus:	false,
 						errors:			""
 					}) }}
 				</div>

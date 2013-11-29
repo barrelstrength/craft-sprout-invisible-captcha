@@ -85,6 +85,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 v0.5.2
 Added: Log now records which tests were failed
 Added: Logging can be turned on or off in plugin settings
+Improved: Elapsed time settings now auto-expand if selected by default
 
 v0.5.1
 Added: Add sproutinvisiblecaptcha_log table

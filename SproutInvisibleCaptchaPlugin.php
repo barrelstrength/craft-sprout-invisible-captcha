@@ -10,7 +10,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-		return '0.5.1';
+		return '0.5.2';
 	}
 
 	public function getDeveloper()
@@ -67,7 +67,50 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	//----------------------------------------------------------------
 	public function senorformPrePost()
 	{	
-		craft()->sproutInvisibleCaptcha->verifySubmission();
+
+		// @TODO - only process Invisible Captcha when appropriate
+
+		// How do we only check for this if Senor Form is 
+		// using Invisible Captcha?  Right now it does it 
+		// every time?
+
+		//  We can check to make sure we have an invisibleCaptcha field?
+		// Is this reliable?  What if someone submitted a form directly?
+		// Señor Form wouldn't know to check for the Invisible Captcha field?
+
+		// What if we make Invisible Captcha a fieldtype?  Then Señor Form will
+		// know it exists.. but we might need to do processing a bit differently
+		// as it won't know until later after the form is submitted.
+
+		$useInvisibleCaptcha = false;
+
+		switch (true) {
+			case (isset($_POST['__UATIME']) ? true : false):
+				$useInvisibleCaptcha = true;
+				break;
+
+			case (isset($_POST['__UAHOME']) ? true : false):
+				$useInvisibleCaptcha = true;
+				break;
+
+			case (isset($_POST['__UAHASH']) ? true : false):
+				$useInvisibleCaptcha = true;
+				break;
+
+			case (isset($_POST['chp']) ? true : false):
+				$useInvisibleCaptcha = true;
+				break;
+			
+			default:
+				# code...
+				break;
+		}
+		
+		if ($useInvisibleCaptcha == true)
+		{
+			craft()->sproutInvisibleCaptcha->verifySubmission();	
+		}
+		
 	}
 
 	// @TODO - what is this for?
@@ -86,6 +129,8 @@ v0.5.2
 Added: Log now records which tests were failed
 Added: Logging can be turned on or off in plugin settings
 Improved: Elapsed time settings now auto-expand if selected by default
+Improved: Senor Form hook now checks for Invisible Captcha 
+					fields before trying to validate
 
 v0.5.1
 Added: Add sproutinvisiblecaptcha_log table

@@ -300,7 +300,10 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		$settings = craft()->plugins->getPlugin('sproutinvisiblecaptcha')->getSettings();
 		
 		// Log failed submissions if enabled
-		if ( $settings->logFailedSubmissions == 'y' )
+		// @TODO - there is a bug with the lightswitch field
+		// that toggles the 'on' value.  Check for both right now.
+		if ( $settings->logFailedSubmissions == 'y' OR 
+				 $settings->logFailedSubmissions == 'on' )
 		{
 			// Log our rejected submission so we can see what's being blocked
 			$model = new SproutInvisibleCaptcha_LogModel();

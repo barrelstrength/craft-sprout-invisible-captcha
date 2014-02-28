@@ -5,7 +5,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 {
 	public function getName()
 	{
-		return Craft::t('Invisible Captcha');
+		return Craft::t('Sprout Invisible Captcha');
 	}
 
 	public function getVersion()
@@ -65,7 +65,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	//----------------------------------------------------------------
 	// @=HOOKS
 	//----------------------------------------------------------------
-	public function senorformPrePost()
+	public function sproutFormsPrePost()
 	{	
 
 		// @TODO - only process Invisible Captcha when appropriate
@@ -113,11 +113,6 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		
 	}
 
-	// @TODO - what is this for?
-	public function verifyCaptchaSubmission()
-	{
-		return craft()->sproutInvisibleCaptcha->verifySubmission();
-	}
 }
 
 //------------------------------------------------------------

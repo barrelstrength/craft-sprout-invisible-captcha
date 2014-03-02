@@ -13,7 +13,26 @@ class SproutInvisibleCaptchaVariable
 		return craft()->plugins->getPlugin('sproutInvisibleCaptcha')->getVersion();
 	}
 
-	public function setCaptcha( $methodString='' )
+	/**
+	 * Output our captcha options on the page
+	 * 
+	 * @param string $methodString Captcha method
+	 * @return mixed Invisible Captcha output
+	 */
+	public function protect( $methodString = '' )
+	{
+		return craft()->sproutInvisibleCaptcha->getProtection($methodString);
+	}
+
+	/**
+	 * @DEPRECATED - This function has been replaced by the protect() function
+	 * 
+	 * Output our captcha options on the page
+	 * 
+	 * @param string $methodString Captcha method
+	 * @return mixed Invisible Captcha output
+	 */
+	public function setCaptcha( $methodString = '' )
 	{
 		return craft()->sproutInvisibleCaptcha->getProtection($methodString);
 	}

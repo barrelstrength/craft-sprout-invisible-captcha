@@ -19,11 +19,11 @@
 		settings.captchaMethod seems to be returning a full array of all the settings
 		not just the selected settings.... what's up with that?  How do we just get the selected settings?
 	
-	 	{{ settings.captchaMethod }}
+		{{ settings.captchaMethod }}
 		{% for method in settings.captchaMethod %}
 	
 		{% endfor %}
- 	#}
+	#}
 
 	<div class="field first">
 			<div class="checkbox-select">
@@ -94,12 +94,12 @@
 	<h3>Log failed submissions in the database</h3>
 
 		{{ forms.lightswitch({
-		  onLabel:  "On",
-		  offLabel: "Off",
-		  name:     "logFailedSubmissions",
-		  on:       (settings.logFailedSubmissions is defined) 
-		  						? settings.logFailedSubmissions 
-		  						: ""
+			onLabel:  "On",
+			offLabel: "Off",
+			name:     "logFailedSubmissions",
+			on:       (settings.logFailedSubmissions is defined) 
+									? settings.logFailedSubmissions 
+									: ""
 		}) }}
 
 	<hr>
@@ -112,15 +112,15 @@
 {% endblock %}
 
 {% set sproutInvisibleCaptchaJs %}
-   $('.time').on('change', function() {
-   	if (this.checked)
- 		{
- 			$('.sub-settings').slideDown('fast')
- 		}
- 		else
- 		{
- 			$('.sub-settings').slideUp('fast')
- 		}
+	 $('.time').on('change', function() {
+		if (this.checked)
+		{
+			$('.sub-settings').slideDown('fast')
+		}
+		else
+		{
+			$('.sub-settings').slideUp('fast')
+		}
 	});
 	$('.more-info').on('click', function() {
 		$(this).next().slideToggle();
@@ -137,7 +137,7 @@
 		margin-top: 20px;
 		margin-bottom: 20px;
 	}
- 	.checkbox-select p {
+	.checkbox-select p {
 		margin-top: 0;
 	}
 	.more-info {

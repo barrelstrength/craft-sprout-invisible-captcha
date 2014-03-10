@@ -12,9 +12,6 @@
             <fileset dir="../../">
                 <include name="${pluginName}/" />
                 <exclude name="${pluginName}/build/" />
-                <exclude name="${pluginName}/resources/css/" />
-                <exclude name="${pluginName}/resources/js/" />
-                <exclude name="${pluginName}/README.md" />
                 <exclude name="${pluginName}/.git/" />
                 <exclude name="${pluginName}/.gitignore" />
                 <exclude name="${pluginName}/.idea/" />

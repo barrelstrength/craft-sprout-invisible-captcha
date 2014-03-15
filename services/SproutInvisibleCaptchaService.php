@@ -8,24 +8,24 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	const METHOD_ORIGIN 		= 3;
 	const METHOD_HONEYPOT		= 4;
 
-	const MIN_ELAPSED_TITME 		= 5; // Fallback in seconds
+	const MIN_ELAPSED_TIME = 5; // Fallback in seconds
 
-	const METHOD_FULL_STRING			= 'FULL';
-	const METHOD_TIME_STRING			= 'TIME';
-	const METHOD_ORIGIN_STRING		= 'ORIGIN';
-	const METHOD_HONEYPOT_STRING	= 'HONEYPOT';
+	const METHOD_FULL_STRING      = 'FULL';
+	const METHOD_TIME_STRING      = 'TIME';
+	const METHOD_ORIGIN_STRING    = 'ORIGIN';
+	const METHOD_HONEYPOT_STRING  = 'HONEYPOT';
 
-	protected $methodMap 			= array(
-		self::METHOD_FULL 		=> self::METHOD_FULL_STRING,
-		self::METHOD_TIME			=> self::METHOD_TIME_STRING,
-		self::METHOD_ORIGIN 	=> self::METHOD_ORIGIN_STRING,
+	protected $methodMap = array(
+		self::METHOD_FULL     => self::METHOD_FULL_STRING,
+		self::METHOD_TIME     => self::METHOD_TIME_STRING,
+		self::METHOD_ORIGIN   => self::METHOD_ORIGIN_STRING,
 		self::METHOD_HONEYPOT => self::METHOD_HONEYPOT_STRING
 	);
 
 	// Used to record failed submissions when logging is enabled
-	private $_originMethodFailed		= 0;
-	private $_honeypotMethodFailed	= 0;
-	private $_timeMethodFailed			= 0;
+	private $_originMethodFailed    = 0;
+	private $_honeypotMethodFailed  = 0;
+	private $_timeMethodFailed      = 0;
 
 
 	/**
@@ -45,9 +45,9 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 			$method = $this->getSavedMethod();
 		}
 
-		$output 	= '';
-		$method		= strtoupper( trim($method) );
-		$methods	= array();
+		$output   = '';
+		$method   = strtoupper( trim($method) );
+		$methods  = array();
 
 		// Optimize for full protection
 		if ( is_string($method) && $method == self::METHOD_FULL_STRING ) {
@@ -129,7 +129,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 				return $this->rejectSubmission();
 			}
 		}
-
+		
 		return $this->approveSubmission();
 	}
 
@@ -300,10 +300,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		$settings = craft()->plugins->getPlugin('sproutinvisiblecaptcha')->getSettings();
 		
 		// Log failed submissions if enabled
-		// @TODO - there is a bug with the lightswitch field
-		// that toggles the 'on' value.  Check for both right now.
-		if ( $settings->logFailedSubmissions == 'y' OR 
-				 $settings->logFailedSubmissions == 'on' )
+		if ( $settings->logFailedSubmissions )
 		{
 			// Log our rejected submission so we can see what's being blocked
 			$model = new SproutInvisibleCaptcha_LogModel();
@@ -593,7 +590,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 			return $elapsedTime;
 		}
 
-		return self::MIN_ELAPSED_TITME;
+		return self::MIN_ELAPSED_TIME;
 	}
 
 	//--------------------------------------------------------------------------------

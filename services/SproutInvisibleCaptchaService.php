@@ -8,8 +8,6 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	const METHOD_ORIGIN 		= 3;
 	const METHOD_HONEYPOT		= 4;
 
-	const MIN_ELAPSED_TIME = 5; // Fallback in seconds
-
 	const METHOD_FULL_STRING      = 'FULL';
 	const METHOD_TIME_STRING      = 'TIME';
 	const METHOD_ORIGIN_STRING    = 'ORIGIN';
@@ -23,10 +21,17 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	);
 
 	// Used to record failed submissions when logging is enabled
-	private $_originMethodFailed    = 0;
-	private $_honeypotMethodFailed  = 0;
-	private $_timeMethodFailed      = 0;
+	public $originMethodFailed    = 0;
+	public $honeypotMethodFailed  = 0;
+	public $timeMethodFailed      = 0;
 
+	protected $settings;
+
+	public function __construct()
+	{
+		// Make it easier to access our settings
+		$this->settings = craft()->plugins->getPlugin('sproutInvisibleCaptcha')->getSettings();		
+	}
 
 	/**
 	 * getProtection()
@@ -182,77 +187,15 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	}
 
 	//-------------------------------------------------------------------------------
-	// @=VALIDATION METHODS
-	//-------------------------------------------------------------------------------
-
-	// Compare elapsed time between GET and POST requests
-	public function verifyTimeSubmission()
-	{
-		$time   = time();
-		$posted = (int) craft()->request->getPost('__UATIME', time() );
-
-		// Time operations must be done after values have been properly assigned and casted
-		$diff   = ($time - $posted);
-		$min 	= (int) $this->getMinElapsedTime();
-
-		// Flag it as a spammy submission based on time
-		// @TODO: May convert the minElapsedTime into a global setting
-		$verified = (bool) ($diff > $min );
-		if ($verified)
-		{
-			return true;
-		}
-		else
-		{
-			$this->_timeMethodFailed = 1;
-			return false;
-		}
-	}
-
-	//-------------------------------------------------------------------------------
-
-	public function verifyOriginSubmission()
-	{
-		$uahash = craft()->request->getPost('__UAHASH');
-		$uahome = craft()->request->getPost('__UAHOME');
-
-		// Run a user agent check
-		if ( ! $uahash || $uahash != $this->getUaHash() ) {
-			return false;
-		}
-
-		// Run originating domain check
-		if ( ! $uahome || $uahome != $this->getDomainHash() ) {
-			$this->_originMethodFailed = 1;
-			return false;
-		}
-
-		// Passed
-		return true;
-
-	}
-
-	//-------------------------------------------------------------------------------
-
-	public function verifyHoneypotSubmission()
-	{
-		// The honeypot field must be left blank
-		if ( craft()->request->getPost('chp') ) {
-			$this->_honeypotMethodFailed = 1;
-			return false;
-		}
-
-		return true;
-	}
-
+	// @=VALIDATION
 	//-------------------------------------------------------------------------------
 
 	public function verifyFullSubmission()
 	{	
 		return
-			$this->verifyTimeSubmission() &&
-			$this->verifyOriginSubmission() &&
-			$this->verifyHoneypotSubmission()
+			craft()->sproutInvisibleCaptcha_timeMethod->verifySubmission() &&
+			craft()->sproutInvisibleCaptcha_originMethod->verifySubmission() &&
+			craft()->sproutInvisibleCaptcha_honeypotMethod->verifySubmission()
 			? true : false;
 	}
 
@@ -298,24 +241,24 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		return $methods;
 	}
 
-	//-------------------------------------------------------------------------------
-
+	/**
+	 * Reject the submission
+	 * 
+	 * @return [type] [description]
+	 */
 	protected function rejectSubmission()
 	{	
-
-		$settings = craft()->plugins->getPlugin('sproutinvisiblecaptcha')->getSettings();
-		
 		// Log failed submissions if enabled
-		if ( $settings->logFailedSubmissions )
+		if ( $this->settings->logFailedSubmissions )
 		{
 			// Log our rejected submission so we can see what's being blocked
 			$model = new SproutInvisibleCaptcha_LogModel();
 
 			$attributes['postData'] 	= json_encode($_POST);
 			$attributes['ipAddress'] 	= $_SERVER["REMOTE_ADDR"];
-			$attributes['originMethodFailed'] 		= $this->_originMethodFailed;
-			$attributes['honeypotMethodFailed'] 	= $this->_honeypotMethodFailed;
-			$attributes['timeMethodFailed'] 			= $this->_timeMethodFailed;
+			$attributes['originMethodFailed'] 		= $this->originMethodFailed;
+			$attributes['honeypotMethodFailed'] 	= $this->honeypotMethodFailed;
+			$attributes['timeMethodFailed'] 			= $this->timeMethodFailed;
 
 			$model->setAttributes($attributes);
 
@@ -366,37 +309,14 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		return true;
 	}
 
-	//-------------------------------------------------------------------------------
-	// @=GENERATOR INTERFACES
-	//--------------------------------------------------------------------------------
-
-	public function getTimeProtection()
-	{
-		return $this->getTimeCheckField();
-	}
-
-	//--------------------------------------------------------------------------------
-
-	public function getOriginProtection()
-	{
-		return $this->getOriginCheckField();
-	}
-
-	//--------------------------------------------------------------------------------
-
-	public function getHoneypotProtection()
-	{
-		return $this->getHoneypotCheckField();
-	}
-
 	//--------------------------------------------------------------------------------
 
 	public function getFullProtection()
 	{
 		return
-			$this->getTimeCheckField().
-			$this->getOriginCheckField().
-			$this->getHoneypotCheckField();
+			craft()->sproutInvisibleCaptcha_timeMethod->getField() .
+			craft()->sproutInvisibleCaptcha_originMethod->getField() .
+			craft()->sproutInvisibleCaptcha_honeypotMethod->getField();
 	}
 
 	//-------------------------------------------------------------------------------
@@ -429,38 +349,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		return sprintf('<input type="hidden" id="__METHOD" name="__METHOD" value="%s" />', $method );
 	}
 
-	//-------------------------------------------------------------------------------
-
-	protected function getTimeCheckField()
-	{
-		return sprintf('<input type="hidden" id="__UATIME" name="__UATIME" value="%s" />', time() );
-	}
-
-	//-------------------------------------------------------------------------------
-
-	protected function getOriginCheckField()
-	{
-		$output = '';
-		$domain = craft()->request->getHostInfo();
-
-		$output .= sprintf('<input type="hidden" id="__UAHOME" name="__UAHOME" value="%s" />', $this->getDomainHash() );
-		$output .= sprintf('<input type="hidden" id="__UAHASH" name="__UAHASH" value="%s"/>', $this->getUaHash() );
-
-		return $output;
-	}
-
-	//-------------------------------------------------------------------------------
-
-	protected function getHoneypotCheckField()
-	{
-		$honeypot = '<div class="chp">'.
-					'<label for="chp">Leave this field blank</label>'.
-					'<input type="text" id="chp" name="chp" />'.
-					'</div><style>.chp{ display: none; }</style>';
-
-		return $honeypot;
-	}
-
+	
 	//-------------------------------------------------------------------------------
 	// @=HELPER METHODS
 	//--------------------------------------------------------------------------------
@@ -517,24 +406,19 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 
 	public function getSavedMethod()
 	{
-		$settings = craft()->plugins->getPlugin('sproutinvisiblecaptcha')->getSettings();
-
-		return $settings->captchaMethod;
+		return $this->settings->captchaMethod;
 	}
 
 	public function getSavedOptions()
 	{
-		$settings = craft()->plugins->getPlugin('sproutinvisiblecaptcha')->getSettings();
-
-		return $settings->methodOptions;
+		return $this->settings->methodOptions;
 	}
 
 	//--------------------------------------------------------------------------------
 
 	public function isMethodSet( $methodName )
 	{
-		$settings		= craft()->plugins->getPlugin('sproutInvisibleCaptcha')->getSettings();
-		$methodString	= empty($settings->captchaMethod) ? '' : $settings->captchaMethod;
+		$methodString	= empty($this->settings->captchaMethod) ? '' : $this->settings->captchaMethod;
 		$methodArray	= explode('|', $methodString);
 
 		return (in_array($methodName, $methodArray) || $methodString == 'full');
@@ -546,10 +430,8 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	{
 		if ( empty($option) || ! is_string($option) ) { return false; }
 
-		$settings = craft()->plugins->getPlugin('sproutInvisibleCaptcha')->getSettings();
-
-		if ( array_key_exists($option, $settings->methodOptions) ) {
-			return $settings->methodOptions[$option];
+		if ( array_key_exists($option, $this->settings->methodOptions) ) {
+			return $this->settings->methodOptions[$option];
 		} else {
 			return false;
 		}
@@ -561,12 +443,8 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	{
 		if ( empty($option) || ! is_string($option) ) { return false; }
 
-		$settings = craft()->plugins->getPlugin('sproutInvisibleCaptcha')->getSettings();
-
-		return array_key_exists($option, $settings->methodOptions);
+		return array_key_exists($option, $this->settings->methodOptions);
 	}
-
-	//--------------------------------------------------------------------------------
 
 	/*
 	 * safeOutput()
@@ -584,56 +462,5 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 
 		return new \Twig_Markup($content, (string) $charset);
 	}
-
-	//--------------------------------------------------------------------------------
-
-	protected function getMinElapsedTime()
-	{
-		$plugin 	= craft()->plugins->getPlugin('sproutInvisibleCaptcha');
-		$settings	= $plugin->getSettings();
-
-		if ( ($elapsedTime = $this->getMethodOption('elapsedTime')) ) {
-			return $elapsedTime;
-		}
-
-		return self::MIN_ELAPSED_TIME;
-	}
-
-	//--------------------------------------------------------------------------------
-
-	protected function getDomainHash()
-	{
-		$domain = craft()->request->getHostInfo();
-
-		return $this->getHash( $domain );
-	}
-
-	//--------------------------------------------------------------------------------
-
-	/*
-	 * getUaHash()
-	 *
-	 * Grab the user agent string and return a hashed version of it
-	 *
-	 * @return string The hashed value of the user agent string
-	 */
-	protected function getUaHash()
-	{
-		return $this->getHash( craft()->request->getUserAgent() );
-	}
-
-	//--------------------------------------------------------------------------------
-
-	/**
-	 * getHash()
-	 *
-	 * Simple string hashing to encode data (Do not use for encryption)
-	 *
-	 * @param  string $str The string to encode
-	 * @return string The hashed value of $str (32 Chars)
-	 */
-	protected function getHash($str)
-	{
-		return md5( sha1($str) );
-	}
+	
 }

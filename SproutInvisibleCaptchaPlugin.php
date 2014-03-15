@@ -73,6 +73,11 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	 */
 	public function sproutFormsPrePost()
 	{
+		$this->_verifySubmission();
+	}
+
+	private function _verifySubmission()
+	{
 		$useInvisibleCaptcha = false;
 
 		switch (true) {
@@ -101,5 +106,18 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		{
 			craft()->sproutInvisibleCaptcha->verifySubmission();	
 		}	
+	}
+
+	public function init()
+	{
+		// Craft Contact Form plugin support
+    craft()->on('contactForm.beforeSend', function(ContactFormEvent $event) {
+    	craft()->sproutInvisibleCaptcha->verifySubmission();
+    });
+
+    // Craft Guest Entries plugin support
+    craft()->on('guestEntries.beforeSave', function(GuestEntriesEvent $event) {
+    	craft()->sproutInvisibleCaptcha->verifySubmission();
+    });
 	}
 }

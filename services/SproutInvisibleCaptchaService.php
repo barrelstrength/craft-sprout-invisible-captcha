@@ -119,6 +119,12 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		// 2. Ignore if not a POST request
 		if ( ! $req->getPost() ) { return $this->rejectSubmission(); }
 
+		// If a method is not set, assume we are not using Invisible captcha
+		// Craft Contact Form and Guest Entries run the on event each time
+		// @TODO - review this workflow
+		if ( ! $req->getPost('__METHOD') ) return $this->approveSubmission();
+
+
 		// 3. Figure out what validation method we need to run
 		$method = $req->getPost('__METHOD'); 			// Pipe delimited list: 1|2|3|4
 		$method = $this->getValidationMethods($method); // Array of methods: array('full') | array('time', 'origin', 'honeypot')

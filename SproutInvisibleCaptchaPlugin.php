@@ -67,7 +67,29 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	//----------------------------------------------------------------
 	
 	/**
-	 * Setup Invisible Captcha to work with Sprout Forms
+	 * Initialize our plugin to support several events
+	 */
+	public function init()
+	{
+		// Support Sprout Forms plugin
+    craft()->on('sproutForms.onBeforeSubmitForm', function(SproutForms_OnBeforeSubmitFormEvent $event) {
+    	craft()->sproutInvisibleCaptcha->verifySubmission();
+    });
+
+		// Support P&T Contact Form plugin
+    craft()->on('contactForm.beforeSend', function(ContactFormEvent $event) {
+    	craft()->sproutInvisibleCaptcha->verifySubmission();
+    });
+
+    // Support P&T Guest Entries plugin
+    craft()->on('guestEntries.beforeSave', function(GuestEntriesEvent $event) {
+    	craft()->sproutInvisibleCaptcha->verifySubmission();
+    });
+	}
+
+	/**
+	 * @DEPRECATED - Setup Invisible Captcha to work with Sprout Forms
+	 * Use sproutForms.onBeforeSubmitForm Event instead
 	 * 
 	 * @return true or redirect Allow form to post if clear, otherwise redirect
 	 */
@@ -106,18 +128,5 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		{
 			craft()->sproutInvisibleCaptcha->verifySubmission();	
 		}	
-	}
-
-	public function init()
-	{
-		// Craft Contact Form plugin support
-    craft()->on('contactForm.beforeSend', function(ContactFormEvent $event) {
-    	craft()->sproutInvisibleCaptcha->verifySubmission();
-    });
-
-    // Craft Guest Entries plugin support
-    craft()->on('guestEntries.beforeSave', function(GuestEntriesEvent $event) {
-    	craft()->sproutInvisibleCaptcha->verifySubmission();
-    });
 	}
 }

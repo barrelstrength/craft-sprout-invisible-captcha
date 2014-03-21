@@ -60,13 +60,18 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 			$output .= $this->getMethodField( $method );
 		} else {
 			// Handle pipe delimited methods
-			if ( is_string($method) ) {
-				if ( stripos($method, '|') !== false ) {
+			if ( is_string($method) ) 
+			{
+				if ( stripos($method, '|') !== false ) 
+				{
 					$method = array_map('trim', explode('|', $method) );
-				} else {
+				}
+				else 
+				{
 					$method = strtoupper($method);
 
-					if ( empty($method) || ! in_array($method, $this->getMethodMap() ) ) {
+					if ( empty($method) || ! in_array($method, $this->getMethodMap() ) ) 
+					{
 						$method = self::METHOD_FULL_STRING;
 					}
 				}
@@ -103,8 +108,6 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 			}
 		}
 
-		$output .= $this->methodOptionFields( $config );
-
 		return $this->safeOutput( $output );
 	}
 
@@ -135,8 +138,10 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		$method = $this->getValidationMethods($method); // Array of methods: array('full') | array('time', 'origin', 'honeypot')
 
 		// 4. No __METHOD no validation
-		if ($method) {
-			if ( $this->spammySubmission($method) ) {				
+		if ($method) 
+		{
+			if ( $this->spammySubmission($method) ) 
+			{				
 				return $this->rejectSubmission();
 			}
 		}
@@ -149,9 +154,11 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		$output = '';
 		$config = array_merge( $this->getSavedOptions(), is_array($config) ? $config : array() );
 
-		if ( is_array($config) && count($config) ) {
+		if ( is_array($config) && count($config) ) 
+		{
 			unset( $config['method'] );
-			foreach ( $config as $option => $value ) {
+			foreach ( $config as $option => $value ) 
+			{
 				$output .= $this->createField($option, $value);
 			}
 		}
@@ -327,7 +334,8 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	{
 		$methods = array();
 
-		if ( is_array($methodName) ) {
+		if ( is_array($methodName) ) 
+		{
 			foreach ($methodName as $name) {
 				if ( in_array( strtoupper($name), $this->getMethodMap() ) ) {
 					$methods[] = $this->getMethodId($name);
@@ -335,14 +343,17 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 			}
 
 			$method = implode('|', $methods);
-		} else {
+		} 
+		else 
+		{
 			$method = $this->getMethodId($methodName);
 
 			return sprintf('<input type="hidden" id="__METHOD" name="__METHOD" value="%s" />', $method );
 		}
 
 		// Keep output on __METHOD relevant
-		if ( in_array(self::METHOD_FULL, $methods) ) {
+		if ( in_array(self::METHOD_FULL, $methods) ) 
+		{
 			$method = self::METHOD_FULL;
 		}
 

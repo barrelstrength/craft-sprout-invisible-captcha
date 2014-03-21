@@ -35,8 +35,10 @@ class SproutInvisibleCaptcha_OriginMethodService extends BaseApplicationComponen
 		$output = '';
 		$domain = craft()->request->getHostInfo();
 
-		$output .= sprintf('<input type="hidden" id="__UAHOME" name="__UAHOME" value="%s" />', $this->getDomainHash() );
-		$output .= sprintf('<input type="hidden" id="__UAHASH" name="__UAHASH" value="%s"/>', $this->getUaHash() );
+		$output .= sprintf('
+<input type="hidden" id="__UAHOME" name="__UAHOME" value="%s" />', $this->getDomainHash() );
+		$output .= sprintf('
+<input type="hidden" id="__UAHASH" name="__UAHASH" value="%s"/>', $this->getUaHash() );
 
 		return $output;
 	}

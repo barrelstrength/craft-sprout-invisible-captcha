@@ -34,7 +34,13 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	{
 		return array(
 			'captchaMethod'	=> array( AttributeType::String, 'default' => 'full'),
-			'methodOptions'	=> array( AttributeType::Mixed, 'default' => array('elapsedTime'=>5) ),
+			'methodOptions'	=> array( AttributeType::Mixed, 'default' => array(
+				'elapsedTime' => 5,
+				'honeypotFieldName' => 'monty',
+				'honeypotScreenReaderMessage' => 'Leave this field blank',
+				'honeypotRequireJavascript' => false,
+				'formKeyDuration' => 3600
+			)),
 			'logFailedSubmissions' => array( AttributeType::String ),
 		);
 	}
@@ -100,6 +106,8 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 
 	private function _verifySubmission()
 	{
+		$honeypotFieldName = craft()->sproutInvisibleCaptcha->getMethodOption('honeypotFieldName');
+
 		$useInvisibleCaptcha = false;
 
 		switch (true) {
@@ -115,7 +123,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 				$useInvisibleCaptcha = true;
 				break;
 
-			case (isset($_POST['chp']) ? true : false):
+			case (isset($_POST[$honeypotFieldName]) ? true : false):
 				$useInvisibleCaptcha = true;
 				break;
 			

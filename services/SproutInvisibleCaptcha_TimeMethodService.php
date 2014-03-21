@@ -39,14 +39,12 @@ class SproutInvisibleCaptcha_TimeMethodService extends BaseApplicationComponent
 
 	public function getField()
 	{
-		return sprintf('<input type="hidden" id="__UATIME" name="__UATIME" value="%s" />', time() );
+		return sprintf('
+<input type="hidden" id="__UATIME" name="__UATIME" value="%s" />', time() );
 	}
 
 	protected function getMinElapsedTime()
 	{
-		$plugin 	= craft()->plugins->getPlugin('sproutInvisibleCaptcha');
-		$settings	= $plugin->getSettings();
-
 		if ( ($elapsedTime = craft()->sproutInvisibleCaptcha->getMethodOption('elapsedTime')) ) {
 			return $elapsedTime;
 		}

@@ -73,6 +73,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	//----------------------------------------------------------------
 	
 	/**
+<<<<<<< HEAD
 	 * Initialize our plugin to support several events
 	 */
 	public function init()
@@ -96,11 +97,15 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	/**
 	 * @DEPRECATED - Setup Invisible Captcha to work with Sprout Forms
 	 * Use sproutForms.onBeforeSubmitForm Event instead
+=======
+	 * Setup Invisible Captcha to work with Sprout Forms
+>>>>>>> b7173d76bc340d8c4a1640c10c15d7fc7315494d
 	 * 
 	 * @return true or redirect Allow form to post if clear, otherwise redirect
 	 */
 	public function sproutFormsPrePost()
 	{
+<<<<<<< HEAD
 		$this->_verifySubmission();
 	}
 
@@ -108,6 +113,8 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	{
 		$honeypotFieldName = craft()->sproutInvisibleCaptcha->getMethodOption('honeypotFieldName');
 
+=======
+>>>>>>> b7173d76bc340d8c4a1640c10c15d7fc7315494d
 		$useInvisibleCaptcha = false;
 
 		switch (true) {
@@ -137,4 +144,8 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 			craft()->sproutInvisibleCaptcha->verifySubmission();	
 		}	
 	}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> b7173d76bc340d8c4a1640c10c15d7fc7315494d

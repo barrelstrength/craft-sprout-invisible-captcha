@@ -70,7 +70,13 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	{
 		return array(
 			'captchaMethod'	=> array( AttributeType::String, 'default' => 'full'),
-			'methodOptions'	=> array( AttributeType::Mixed, 'default' => array('elapsedTime'=>5) ),
+			'methodOptions'	=> array( AttributeType::Mixed, 'default' => array(
+				'elapsedTime' => 5,
+				'honeypotFieldName' => 'monty',
+				'honeypotScreenReaderMessage' => 'Leave this field blank',
+				'honeypotRequireJavascript' => false,
+				'formKeyDuration' => 3600
+			)),
 			'logFailedSubmissions' => array( AttributeType::String ),
 		);
 	}
@@ -103,12 +109,41 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	//----------------------------------------------------------------
 	
 	/**
-	 * Setup Invisible Captcha to work with Sprout Forms
+	 * Initialize our plugin to support several events
+	 */
+	public function init()
+	{
+		// Support Sprout Forms plugin
+    craft()->on('sproutForms.onBeforeSubmitForm', function(SproutForms_OnBeforeSubmitFormEvent $event) {
+    	craft()->sproutInvisibleCaptcha->verifySubmission();
+    });
+
+		// Support P&T Contact Form plugin
+    craft()->on('contactForm.beforeSend', function(ContactFormEvent $event) {
+    	craft()->sproutInvisibleCaptcha->verifySubmission();
+    });
+
+    // Support P&T Guest Entries plugin
+    craft()->on('guestEntries.beforeSave', function(GuestEntriesEvent $event) {
+    	craft()->sproutInvisibleCaptcha->verifySubmission();
+    });
+	}
+
+	/**
+	 * @DEPRECATED - Setup Invisible Captcha to work with Sprout Forms
+	 * Use sproutForms.onBeforeSubmitForm Event instead
 	 * 
 	 * @return true or redirect Allow form to post if clear, otherwise redirect
 	 */
 	public function sproutFormsPrePost()
 	{
+		$this->_verifySubmission();
+	}
+
+	private function _verifySubmission()
+	{
+		$honeypotFieldName = craft()->sproutInvisibleCaptcha->getMethodOption('honeypotFieldName');
+
 		$useInvisibleCaptcha = false;
 
 		switch (true) {
@@ -124,7 +159,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 				$useInvisibleCaptcha = true;
 				break;
 
-			case (isset($_POST['chp']) ? true : false):
+			case (isset($_POST[$honeypotFieldName]) ? true : false):
 				$useInvisibleCaptcha = true;
 				break;
 			

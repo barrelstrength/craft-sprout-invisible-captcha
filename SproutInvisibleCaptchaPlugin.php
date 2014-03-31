@@ -10,7 +10,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-		return '0.5.4';
+		return '0.5.5';
 	}
 
 	public function getDeveloper()
@@ -26,6 +26,42 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	public function hasCpSection()
 	{
 		return false;
+	}
+	
+	public function init()
+	{
+	    craft()->on('contactForm.beforeSend', array($this, 'contactFormOnBeforeSend'));
+	}
+	
+	/**
+	 * Contact form handler
+	 * 
+	 * @param ContactFormEvent $event
+	 * @return void
+	 */
+	public function contactFormOnBeforeSend(ContactFormEvent $event)
+	{
+	    // 'redirectOnFailure' and 'onSuccessRedirect' will cause a redirect directly from the service;
+	    // we want to know the status instead, so we'll temporarily disable this by unsetting these vars
+	    $onSuccessRedirect = craft()->request->getPost('onSuccessRedirect');
+	    $redirectOnFailure = craft()->request->getPost('redirectOnFailure');
+	    $redirect = craft()->request->getPost('redirect');
+	    unset($_POST['onSuccessRedirect']);
+	    unset($_POST['redirectOnFailure']);	    
+	    unset($_POST['redirect']);
+	    
+	    if ( ! $this->sproutFormsPrePost()) {
+	        $event->isValid = false; // problem
+	    } else {
+	        $event->isValid = true; // all good
+	    }
+	    
+	    // put things back where we found them, just in case
+	    $_POST['onSuccessRedirect'] = $onSuccessRedirect;
+	    $_POST['redirectOnFailure'] = $redirectOnFailure;	
+	    $_POST['redirect']          = $redirect;
+	    
+	    return $event;
 	}
 
 	//------------------------------------------------------------
@@ -99,7 +135,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		
 		if ($useInvisibleCaptcha == true)
 		{
-			craft()->sproutInvisibleCaptcha->verifySubmission();	
+			return craft()->sproutInvisibleCaptcha->verifySubmission();	
 		}	
 	}
 }

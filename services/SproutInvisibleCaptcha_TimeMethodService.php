@@ -1,7 +1,7 @@
 <?php
 namespace Craft;
 
-class SproutInvisibleCaptcha_TimeMethodService extends BaseApplicationComponent
+class SproutInvisibleCaptcha_TimeMethodService extends BaseApplicationComponent implements SproutInvisibleCaptcha_MethodInterfaceService
 {
 
 	// Fallback in seconds

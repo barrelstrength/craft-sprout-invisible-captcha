@@ -1,7 +1,7 @@
 <?php
 namespace Craft;
 
-class SproutInvisibleCaptcha_HoneypotMethodService extends BaseApplicationComponent
+class SproutInvisibleCaptcha_HoneypotMethodService extends BaseApplicationComponent implements SproutInvisibleCaptcha_MethodInterfaceService
 {
 
 	public function verifySubmission()

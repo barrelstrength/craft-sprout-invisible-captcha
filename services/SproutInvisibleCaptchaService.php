@@ -119,18 +119,18 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	 *
 	 * @return void
 	 */
-	public function verifySubmission()
+	public function verifySubmission($returnResult = false)
 	{
 		// 1. Get the request instance (aliasing)
 		$req = craft()->request;
 
 		// 2. Ignore if not a POST request
-		if ( ! $req->getPost() ) { return $this->rejectSubmission(); }
+		if ( ! $req->getPost() ) { return $this->rejectSubmission($returnResult); }
 
 		// If a method is not set, assume we are not using Invisible captcha
 		// Craft Contact Form and Guest Entries run the on event each time
 		// @TODO - review this workflow
-		if ( ! $req->getPost('__METHOD') ) return $this->approveSubmission();
+		if ( ! $req->getPost('__METHOD') ) return $this->approveSubmission($returnResult);
 
 
 		// 3. Figure out what validation method we need to run
@@ -142,11 +142,11 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		{
 			if ( $this->spammySubmission($method) ) 
 			{				
-				return $this->rejectSubmission();
+				return $this->rejectSubmission($returnResult);
 			}
 		}
 		
-		return $this->approveSubmission();
+		return $this->approveSubmission($returnResult);
 	}
 
 	public function methodOptionFields( $config=array() )
@@ -177,20 +177,22 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	protected function spammySubmission( $methods=array() )
 	{
 		if ( is_array($methods) && count($methods) ) {
-			foreach ($methods as $method) {
-				$method = $this->getMethodTranslation($method, 'verify', 'Submission');
+			foreach ($methods as $method) {				
+			    $file = 'SproutInvisibleCaptcha_' . ucfirst(strtolower($method)) . 'MethodService.php';
+			    
+			    if ( ! file_exists(dirname(__FILE__) . '/' . $file)) {
+			        continue;
+			    }
+			    
+			    $service = 'sproutInvisibleCaptcha_' . lcfirst(strtolower($method)) . 'Method';
 
-				if ( method_exists($this, $method) ) {
-					if ( ! $this->$method() ) {
-						return true;
-					}
-				}
-
-				return false;
+			    if ( ! craft()->$service->verifySubmission()) {
+			        return true;
+			    }
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	//-------------------------------------------------------------------------------
@@ -253,7 +255,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	 * 
 	 * @return [type] [description]
 	 */
-	protected function rejectSubmission()
+	protected function rejectSubmission($returnResult = false)
 	{	
 		// Log failed submissions if enabled
 		if ( $this->settings->logFailedSubmissions )
@@ -280,6 +282,10 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		}
 		
 		//------------------------------------------------------------
+		
+		if ($returnResult) {
+		    return false;
+		}
 
 		// See if we should redirect to a different URL on failure
 		// otherwise, fallback to Craft redirect
@@ -305,8 +311,13 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		exit;
 	}
 
-	protected function approveSubmission()
+	protected function approveSubmission($returnResult = false)
 	{
+	    // nothing for us to do if everything checks out
+	    if ($returnResult) {
+	        return true;
+	    }
+	    
 		$redirectUrl= craft()->request->getPost('onSuccessRedirect');
 
 		if ( !empty($redirectUrl) ) {

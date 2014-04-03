@@ -1,7 +1,7 @@
 <?php
 namespace Craft;
 
-class SproutInvisibleCaptcha_OriginMethodService extends BaseApplicationComponent
+class SproutInvisibleCaptcha_OriginMethodService extends BaseApplicationComponent implements SproutInvisibleCaptcha_MethodInterfaceService
 {
 	
 	public function verifySubmission()

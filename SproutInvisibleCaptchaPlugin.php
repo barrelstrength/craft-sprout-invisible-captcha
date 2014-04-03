@@ -10,7 +10,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-		return '0.5.5';
+		return '0.5.6';
 	}
 
 	public function getDeveloper()
@@ -26,11 +26,6 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	public function hasCpSection()
 	{
 		return false;
-	}
-	
-	public function init()
-	{
-	    craft()->on('contactForm.beforeSend', array($this, 'contactFormOnBeforeSend'));
 	}
 	
 	/**
@@ -115,7 +110,8 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	{
 		// Support Sprout Forms plugin
         craft()->on('sproutForms.onBeforeSubmitForm', function(SproutForms_OnBeforeSubmitFormEvent $event) {
-        	craft()->sproutInvisibleCaptcha->verifySubmission();
+        	$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
+        	return $event;
         });
     
     		// Support P&T Contact Form plugin

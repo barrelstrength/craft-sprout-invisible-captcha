@@ -304,11 +304,11 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 				$url = craft()->request->getPath();
 			}
 
-			craft()->request->redirect($url);
+			// craft()->request->redirect($url);
 		}
 
 		// Make sure we don't let anything through
-		exit;
+		return false;
 	}
 
 	protected function approveSubmission($returnResult = false)

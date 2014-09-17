@@ -36,27 +36,27 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	 */
 	public function contactFormOnBeforeSend(ContactFormEvent $event)
 	{
-	    // 'redirectOnFailure' and 'onSuccessRedirect' will cause a redirect directly from the service;
-	    // we want to know the status instead, so we'll temporarily disable this by unsetting these vars
-	    $onSuccessRedirect = craft()->request->getPost('onSuccessRedirect');
-	    $redirectOnFailure = craft()->request->getPost('redirectOnFailure');
-	    $redirect = craft()->request->getPost('redirect');
-	    unset($_POST['onSuccessRedirect']);
-	    unset($_POST['redirectOnFailure']);	    
-	    unset($_POST['redirect']);
-	    
-	    if ( ! $this->sproutFormsPrePost()) {
-	        $event->isValid = false; // problem
-	    } else {
-	        $event->isValid = true; // all good
-	    }
-	    
-	    // put things back where we found them, just in case
-	    $_POST['onSuccessRedirect'] = $onSuccessRedirect;
-	    $_POST['redirectOnFailure'] = $redirectOnFailure;	
-	    $_POST['redirect']          = $redirect;
-	    
-	    return $event;
+			// 'redirectOnFailure' and 'onSuccessRedirect' will cause a redirect directly from the service;
+			// we want to know the status instead, so we'll temporarily disable this by unsetting these vars
+			$onSuccessRedirect = craft()->request->getPost('onSuccessRedirect');
+			$redirectOnFailure = craft()->request->getPost('redirectOnFailure');
+			$redirect = craft()->request->getPost('redirect');
+			unset($_POST['onSuccessRedirect']);
+			unset($_POST['redirectOnFailure']);	    
+			unset($_POST['redirect']);
+			
+			if ( ! $this->sproutFormsPrePost()) {
+					$event->isValid = false; // problem
+			} else {
+					$event->isValid = true; // all good
+			}
+			
+			// put things back where we found them, just in case
+			$_POST['onSuccessRedirect'] = $onSuccessRedirect;
+			$_POST['redirectOnFailure'] = $redirectOnFailure;	
+			$_POST['redirect']          = $redirect;
+			
+			return $event;
 	}
 
 	//------------------------------------------------------------
@@ -67,7 +67,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 			'captchaMethod'	=> array( AttributeType::String, 'default' => 'full'),
 			'methodOptions'	=> array( AttributeType::Mixed, 'default' => array(
 				'elapsedTime' => 5,
-				'honeypotFieldName' => 'monty',
+				'honeypotFieldName' => 'abcdefxyz',
 				'honeypotScreenReaderMessage' => 'Leave this field blank',
 				'honeypotRequireJavascript' => false,
 				'formKeyDuration' => 3600
@@ -103,28 +103,33 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	// @=HOOKS
 	//----------------------------------------------------------------
 	
+	public function registerSproutField()
+	{
+		return 'SproutInvisibleCaptcha_InvisibleCaptcha';
+	}
+
 	/**
 	 * Initialize our plugin to support several events
 	 */
 	public function init()
 	{
 		// Support Sprout Forms plugin
-        craft()->on('sproutForms.onBeforeSubmitForm', function(SproutForms_OnBeforeSubmitFormEvent $event) {
-        	$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
-        	return $event;
-        });
-    
-    		// Support P&T Contact Form plugin
-        craft()->on('contactForm.beforeSend', function(ContactFormEvent $event) {
-        	$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
-        	return $event;
-        });
-    
-        // Support P&T Guest Entries plugin
-        craft()->on('guestEntries.beforeSave', function(GuestEntriesEvent $event) {
-        	$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
-        	return $event;
-        });
+		craft()->on('sproutForms.beforeSaveEntry', function(Event $event) {			
+			$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
+			return $event;
+		});
+
+		// Support P&T Contact Form plugin
+		craft()->on('contactForm.beforeSend', function(ContactFormEvent $event) {
+			$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
+			return $event;
+		});
+
+		// Support P&T Guest Entries plugin
+		craft()->on('guestEntries.beforeSave', function(GuestEntriesEvent $event) {
+			$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
+			return $event;
+		});
 	}
 
 	/**

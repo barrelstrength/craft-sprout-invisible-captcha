@@ -33,10 +33,10 @@ class SproutInvisibleCaptcha_HoneypotMethodService extends BaseApplicationCompon
 			{
 				// query the db and see if the value matches, return true if so
 				$key = craft()->db->createCommand()
-				    ->select('keys.key')
-				    ->from('sproutinvisiblecaptcha_keys as keys')
-				    ->where('keys.key=:key', array(':key'=> $honeypotValue))
-				    ->queryScalar();
+						->select('keys.key')
+						->from('sproutinvisiblecaptcha_keys as keys')
+						->where('keys.key=:key', array(':key'=> $honeypotValue))
+						->queryScalar();
 
 				if ($key) return true;
 				
@@ -118,27 +118,26 @@ class SproutInvisibleCaptcha_HoneypotMethodService extends BaseApplicationCompon
 	 */
 	function randomString()
 	{
-	    $characterSetArray = array();
+			$characterSetArray = array();
 
-	    $characterSetArray[] = array(
-	    	'count' => 10, 
-	    	'characters' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-	    );
-	    $characterSetArray[] = array(
-	    	'count' => 5, 
-	    	'characters' => '0123456789'
-	    );
+			$characterSetArray[] = array(
+				'count' => 10, 
+				'characters' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+			);
+			$characterSetArray[] = array(
+				'count' => 5, 
+				'characters' => '0123456789'
+			);
 
-	    $tempArray = array();
-	    foreach ($characterSetArray as $characterSet) 
-	    {
-	        for ($i = 0; $i < $characterSet['count']; $i++) 
-	        {
-	            $tempArray[] = $characterSet['characters'][rand(0, strlen($characterSet['characters']) - 1)];
-	        }
-	    }
-	    shuffle($tempArray);
-	    return implode('', $tempArray);
+			$tempArray = array();
+			foreach ($characterSetArray as $characterSet) 
+			{
+					for ($i = 0; $i < $characterSet['count']; $i++) 
+					{
+							$tempArray[] = $characterSet['characters'][rand(0, strlen($characterSet['characters']) - 1)];
+					}
+			}
+			shuffle($tempArray);
+			return implode('', $tempArray);
 	}
-	
 }

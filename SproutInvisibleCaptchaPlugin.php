@@ -80,7 +80,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 
 	public function getSettingsHtml()
 	{
-		return craft()->templates->render('sproutinvisiblecaptcha/settings/index', array(
+		return craft()->templates->render('sproutinvisiblecaptcha/_cp/settings', array(
 			'settings' => $this->getSettings()
 		));
 	}
@@ -103,6 +103,10 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	// @=HOOKS
 	//----------------------------------------------------------------
 	
+	/**
+	 * Adds support for Sprout Forms front-end field
+	 * @return class name
+	 */
 	public function registerSproutField()
 	{
 		return 'SproutInvisibleCaptcha_InvisibleCaptcha';
@@ -114,7 +118,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	public function init()
 	{
 		// Support Sprout Forms plugin
-		craft()->on('sproutForms.beforeSaveEntry', function(Event $event) {			
+		craft()->on('sproutForms.beforeSaveEntry', function(SproutForms_OnBeforeSaveEntryEvent $event) {			
 			$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
 			return $event;
 		});
@@ -129,6 +133,13 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		craft()->on('guestEntries.beforeSave', function(GuestEntriesEvent $event) {
 			$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
 			return $event;
+		});
+
+		// Protect Sprout Forms with Invisible Captcha
+		craft()->templates->hook('sproutForms.modifyForm', function(&$context)
+		{	
+			// @TODO - add setting to turn on/off support
+			return craft()->sproutInvisibleCaptcha->getProtection();
 		});
 	}
 

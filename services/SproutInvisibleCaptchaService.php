@@ -161,7 +161,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		// 4. No __METHOD no validation
 		if ($method) 
 		{
-			if ($this->spammySubmission($method)) 
+			if ($this->spammySubmission($method) == false) 
 			{
 				return $this->rejectSubmission($returnResult);
 			}
@@ -195,22 +195,26 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	
 	protected function spammySubmission($methods = array())
 	{
-		if (is_array($methods) && count($methods)) {
-			foreach ($methods as $method) {
-				
-				if ($method == 'FULL') {
-					return $this->verifyFullSubmission();
+		if (is_array($methods) && count($methods)) 
+		{
+			foreach ($methods as $method) 
+			{
+				if ($method == 'FULL') 
+				{					
+					return ($this->verifyFullSubmission());
 				}
 				
 				$file = 'SproutInvisibleCaptcha_' . ucfirst(strtolower($method)) . 'MethodService.php';
 				
-				if (!file_exists(dirname(__FILE__) . '/' . $file)) {
+				if (!file_exists(dirname(__FILE__) . '/' . $file)) 
+				{
 					continue;
 				}
 				
 				$service = 'sproutInvisibleCaptcha_' . lcfirst(strtolower($method)) . 'Method';
 				
-				if (!craft()->$service->verifySubmission()) {
+				if (!craft()->$service->verifySubmission()) 
+				{
 					return true;
 				}
 			}
@@ -286,7 +290,9 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	protected function rejectSubmission($returnResult = false)
 	{
 		// Log failed submissions if enabled
-		if ($this->settings->logFailedSubmissions) {
+		if ($this->settings->logFailedSubmissions) 
+		{
+
 			// Log our rejected submission so we can see what's being blocked
 			$model = new SproutInvisibleCaptcha_LogModel();
 			

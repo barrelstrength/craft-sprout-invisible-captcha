@@ -10,7 +10,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-		return '0.5.6';
+		return '0.6.0';
 	}
 
 	public function getDeveloper()

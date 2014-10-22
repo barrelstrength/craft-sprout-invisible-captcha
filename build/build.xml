@@ -15,7 +15,7 @@
                 <exclude name="${pluginName}/.git/" />
                 <exclude name="${pluginName}/.gitignore" />
                 <exclude name="${pluginName}/.idea/" />
-                <exclude name="${pluginName}/fieldtypes/" />
+                <exclude name="${pluginName}/tests/" />
             </fileset>
         </zip>
         <echo msg="Release for (${pluginName}) has been created!" />

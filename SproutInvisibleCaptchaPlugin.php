@@ -178,6 +178,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 			return $event;
 		});
 
+		// @TODO - Add support for User Registration
 		// Support User Registration
 		// craft()->on('users.onBeforeSaveUser', function(Event $event) {
 

@@ -73,6 +73,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 				'formKeyDuration' => 3600
 			)),
 			'logFailedSubmissions' => array( AttributeType::String ),
+			'sproutFormsDisplayFormTagOutput' => array( AttributeType::Bool ),
 		);
 	}
 
@@ -118,29 +119,88 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	public function init()
 	{
 		// Support Sprout Forms plugin
-		craft()->on('sproutForms.beforeSaveEntry', function(SproutForms_OnBeforeSaveEntryEvent $event) {			
+		craft()->on('sproutForms.beforeSaveEntry', function(SproutForms_OnBeforeSaveEntryEvent $event) {
 			$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
+
+			if (!$event->isValid) 
+			{
+				$event->fakeIt = true;
+
+				if (craft()->request->getPost('redirectOnFailure') != "") 
+				{
+					$_POST['redirect'] = craft()->request->getPost('redirectOnFailure');
+				}
+			}
+
 			return $event;
+		});
+
+		// Support for displayForm() tag Invisible Captcha output via Hook (if enabled)
+		craft()->templates->hook('sproutForms.modifyForm', function(&$context)
+		{	
+			if ($this->getSettings()->sproutFormsDisplayFormTagOutput) 
+			{	
+				return craft()->sproutInvisibleCaptcha->getProtection();
+			}
 		});
 
 		// Support P&T Contact Form plugin
 		craft()->on('contactForm.beforeSend', function(ContactFormEvent $event) {
 			$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
+
+			if (!$event->isValid) 
+			{
+				$event->fakeIt = true;
+
+				if (craft()->request->getPost('redirectOnFailure') != "") 
+				{
+					$_POST['redirect'] = craft()->request->getPost('redirectOnFailure');
+				}
+			}
+
 			return $event;
 		});
 
 		// Support P&T Guest Entries plugin
 		craft()->on('guestEntries.beforeSave', function(GuestEntriesEvent $event) {
 			$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
+
+			if (!$event->isValid) 
+			{
+				$event->fakeIt = true;
+
+				if (craft()->request->getPost('redirectOnFailure') != "") 
+				{
+					$_POST['redirect'] = craft()->request->getPost('redirectOnFailure');
+				}
+			}
+			
 			return $event;
 		});
 
-		// Protect Sprout Forms with Invisible Captcha
-		craft()->templates->hook('sproutForms.modifyForm', function(&$context)
-		{	
-			// @TODO - add setting to turn on/off support
-			return craft()->sproutInvisibleCaptcha->getProtection();
-		});
+		// Support User Registration
+		// craft()->on('users.onBeforeSaveUser', function(Event $event) {
+
+		// 	$isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
+
+		// 	if (!$isValid) 
+		// 	{
+		// 		if (craft()->request->getPost('redirectOnFailure') != "") 
+		// 		{
+		// 			$url = craft()->request->getPost('redirectOnFailure');
+		// 		}
+		// 		else
+		// 		{
+		// 			$url = craft()->request->getPost('redirect');
+		// 		}
+
+		// 		// craft()->request->redirect($url);
+
+		// 		// $route = craft()->urlManager->parseUrl(craft()->request);
+		// 		// craft()->runController($route);
+		// 		// craft()->end();
+		// 	}
+		// });
 	}
 
 	/**

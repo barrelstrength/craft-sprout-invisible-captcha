@@ -151,6 +151,20 @@
 
 	<hr>
 
+	<h3>Enable Sprout Forms Protection</h3>
+	<p>Automatically add Invisible Captcha support for all Sprout Forms using the `craft.sproutForms.displayForm()` tag.</p>
+
+		{{ forms.lightswitch({
+			onLabel:  "On",
+			offLabel: "Off",
+			name:     "sproutFormsDisplayFormTagOutput",
+			on:       (settings.sproutFormsDisplayFormTagOutput is defined) 
+									? settings.sproutFormsDisplayFormTagOutput 
+									: ""
+		}) }}
+
+	<hr>
+
 	<p style="position:absolute;right:30px;bottom:0px;font-size:11px;">
 		<a href="http://barrelstrengthdesign.com" title="Barrel Strength" target="_blank"style="font-weight:bold;color:#999;">{{ plugin.getName() }}</a> {{ plugin.getVersion() }} | Designed by
 		<a href="http://barrelstrengthdesign.com" title="Barrel Strength" target="_blank" style="font-weight:bold;color:#999;">(Barrel Strength)</a>

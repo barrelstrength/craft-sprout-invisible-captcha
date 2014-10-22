@@ -288,11 +288,10 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	 * @return [type] [description]
 	 */
 	protected function rejectSubmission($returnResult = false)
-	{
+	{	
 		// Log failed submissions if enabled
 		if ($this->settings->logFailedSubmissions) 
-		{
-
+		{	
 			// Log our rejected submission so we can see what's being blocked
 			$model = new SproutInvisibleCaptcha_LogModel();
 			
@@ -308,7 +307,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 			$record    = $logRecord->create();
 			
 			$record->setAttributes($model->getAttributes(), false);
-			
+
 			// Let's assume this works.  If not, carry on.
 			// No need to disrupt the user experience
 			$record->save();

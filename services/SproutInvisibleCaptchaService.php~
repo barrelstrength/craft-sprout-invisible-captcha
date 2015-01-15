@@ -204,7 +204,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 					if($this->verifyFullSubmission()==true)				
 						return false;//this means they all pass the spam tests
 					else
-						return true; //this means at least one test failed and its spam!
+						return true; //this means one test failed and its spam!
 				}
 				
 				$file = 'SproutInvisibleCaptcha_' . ucfirst(strtolower($method)) . 'MethodService.php';

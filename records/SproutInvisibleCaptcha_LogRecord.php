@@ -14,6 +14,7 @@ class SproutInvisibleCaptcha_LogRecord extends BaseRecord
 			'timeMethodFailed'      => array(AttributeType::Bool),
 			'honeypotMethodFailed'  => array(AttributeType::Bool),
 			'originMethodFailed'    => array(AttributeType::Bool),
+			'duplicateMethodFailed' => array(AttributeType::Bool),
 			'postData'              => array(AttributeType::Mixed),
 			'ipAddress'             => array(AttributeType::String)
 		);

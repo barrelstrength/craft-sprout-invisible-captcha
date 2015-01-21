@@ -3,18 +3,17 @@ namespace Craft;
 
 class SproutInvisibleCaptcha_DuplicateMethodService extends BaseApplicationComponent implements SproutInvisibleCaptcha_MethodInterfaceService
 {
-	//basically we give the form a unique id and clear it after a successful submit.
-	//if the form is submited more than once then the 'form_token' doesn't get set properly thus 
-	//automatically returning a spam report the second time. Only the first submission will be recorded.
 	public function verifySubmission()
 	{		
 		if(isset($_SESSION['form_token']))
-		{			
+		{	
+			// If there is a valid unique token set, unset it and return true.		
 			unset($_SESSION['form_token']);		
 			return true;			
 		}		 
 		else
 		{
+			// If there is no token set fail the method to prevent duplicate submission, log in the database, and return false
 			craft()->sproutInvisibleCaptcha->duplicateMethodFailed = 1;
 			return false;
 		}
@@ -22,10 +21,10 @@ class SproutInvisibleCaptcha_DuplicateMethodService extends BaseApplicationCompo
 
 	public function getProtection()
 	{	 						
-		/*** create the unique token  ***/
+		// Create the unique token 
 		$form_token = uniqid();
 
-		/*** create session variable ***/
+		// Create session variable
 		$_SESSION['form_token'] = $form_token;		
 
 		return $this->getField();

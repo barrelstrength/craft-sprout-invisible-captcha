@@ -88,6 +88,14 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 
 	public function prepSettings($settings)
 	{
+		// Check if there is any selection made in options menu.	
+		if(!isset($settings['captchaMethod']))
+		{
+			$settings['captchaMethod'] = 'none';
+			return $settings;
+		}	
+
+		// If options are selected continue
 		$methodArray = $settings['captchaMethod'];
 		$methodString = implode('|', $methodArray);
 

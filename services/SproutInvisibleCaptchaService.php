@@ -8,20 +8,26 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	const METHOD_ORIGIN = 3;
 	const METHOD_HONEYPOT = 4;
 	const METHOD_DUPLICATE = 5;
+	const METHOD_JSCHECK = 6;
 
 	const METHOD_FULL_STRING = 'FULL';
 	const METHOD_TIME_STRING = 'TIME';
 	const METHOD_ORIGIN_STRING = 'ORIGIN';
 	const METHOD_HONEYPOT_STRING = 'HONEYPOT';
 	const METHOD_DUPLICATE_STRING = 'DUPLICATE';
+	const METHOD_JSCHECK_STRING = 'JSCHECK';
 	
-	protected $methodMap = array(self::METHOD_FULL => self::METHOD_FULL_STRING, self::METHOD_TIME => self::METHOD_TIME_STRING, self::METHOD_ORIGIN => self::METHOD_ORIGIN_STRING, self::METHOD_HONEYPOT => self::METHOD_HONEYPOT_STRING, self::METHOD_DUPLICATE => self::METHOD_DUPLICATE_STRING);
+	protected $methodMap = array(self::METHOD_FULL => self::METHOD_FULL_STRING, 
+		self::METHOD_TIME => self::METHOD_TIME_STRING, self::METHOD_ORIGIN => self::METHOD_ORIGIN_STRING, 
+		self::METHOD_HONEYPOT => self::METHOD_HONEYPOT_STRING, self::METHOD_DUPLICATE => self::METHOD_DUPLICATE_STRING,
+		self::METHOD_JSCHECK => self::METHOD_JSCHECK_STRING);
 	
 	// Used to record failed submissions when logging is enabled
 	public $originMethodFailed = 0;
 	public $honeypotMethodFailed = 0;
 	public $timeMethodFailed = 0;
 	public $duplicateMethodFailed = 0;
+	public $jscheckMethodFailed = 0;
 	
 	protected $settings;
 	
@@ -159,7 +165,10 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		
 		// 3. Figure out what validation method we need to run
 		$method = $req->getPost('__METHOD'); // Pipe delimited list: 1|2|3|4
-		$method = $this->getValidationMethods($method); // Array of methods: array('full') | array('time', 'origin', 'honeypot', 'duplicate')
+
+		// Array of methods: array('full') | array('time', 'origin', 'honeypot', 'duplicate', 'jscheck')
+		$method = $this->getValidationMethods($method); 
+
 		
 		// 4. No __METHOD no validation
 		if($method)
@@ -237,7 +246,8 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	{
 		return craft()->sproutInvisibleCaptcha_timeMethod->verifySubmission() 
 				&& craft()->sproutInvisibleCaptcha_originMethod->verifySubmission() 
-				&& craft()->sproutInvisibleCaptcha_duplicateMethod->verifySubmission() 
+				&& craft()->sproutInvisibleCaptcha_duplicateMethod->verifySubmission()
+				&& craft()->sproutInvisibleCaptcha_jscheckMethod->verifySubmission() 
 				&& craft()->sproutInvisibleCaptcha_honeypotMethod->verifySubmission();
 	}
 	
@@ -308,6 +318,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 			$attributes['duplicateMethodFailed']   = $this->duplicateMethodFailed;
 			$attributes['honeypotMethodFailed'] = $this->honeypotMethodFailed;
 			$attributes['timeMethodFailed']     = $this->timeMethodFailed;
+			$attributes['jscheckMethodFailed']     = $this->jscheckMethodFailed;
 			
 			$model->setAttributes($attributes);
 			
@@ -374,7 +385,11 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	
 	public function getFullProtection()
 	{
-		return craft()->sproutInvisibleCaptcha_timeMethod->getField() . craft()->sproutInvisibleCaptcha_originMethod->getField() . craft()->sproutInvisibleCaptcha_honeypotMethod->getField() . craft()->sproutInvisibleCaptcha_duplicateMethod->getField();
+		return craft()->sproutInvisibleCaptcha_timeMethod->getField() . 
+		craft()->sproutInvisibleCaptcha_originMethod->getField() . 
+		craft()->sproutInvisibleCaptcha_honeypotMethod->getField() . 
+		craft()->sproutInvisibleCaptcha_duplicateMethod->getField() .
+		craft()->sproutInvisibleCaptcha_jscheckMethod->getField();
 	}
 	
 	//-------------------------------------------------------------------------------

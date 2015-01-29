@@ -51,6 +51,20 @@
 				</div>
 
 			</div>
+			<div class="method-jscheck">
+			
+				<label>
+					<input type="checkbox" value="jscheck" name="captchaMethod[]" {% if plugin.isMethodSet('jscheck') %}checked{% endif %}>
+					Prevents submissions if no JavaScript detected (JsCheck)
+				</label> 
+				<span class="more-info">?</span>
+				<div class="note">
+					<p>Prevents submission of forms if javascript is not present. The <b>JsCheck</b> spam prevention method creates a unique id and uses javascript to set the session variable. If javascript is not enabled or missing all together the session variable is not set and our javascript test fails.</p>
+
+					<p><b>Note:</b> This method will block submissions from browsers without javascript enabled.</p>
+				</div>
+
+			</div>
 			<div class="option method-honeypot">
 
 				<div>

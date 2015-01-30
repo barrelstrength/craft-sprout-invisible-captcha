@@ -79,13 +79,14 @@
 						<p><b>Note:</b> Some screen readers will see this hidden field.  We will clearly label the hidden field with a message that says to a user with a screen reader to not add anything to the honeypot form field.</p>
 					</div>
 				</div>
-
+ 
+				{% set ishonetpotset = plugin.isMethodSet('honeypot') %}
 				{% set honeypotFieldName = plugin.getMethodOption('honeypotFieldName') %}
 				{% set honeypotScreenReaderMessage = plugin.getMethodOption('honeypotScreenReaderMessage') %}
 				{% set honeypotRequireJavascript = plugin.getMethodOption('honeypotRequireJavascript') %}
 				{% set formKeyDuration = plugin.getMethodOption('formKeyDuration') %}
 
-				<div class="sub-settings" {% if not honeypotFieldName %}style="display:none;"{% endif %}>
+				<div class="sub-settings" {% if ishonetpotset is sameas(false) %}style="display:none;"{%else %}style="display:block;"{% endif %}>
 					
 					{{ forms.textField({
 						id:				"methodOptions[honeypotFieldName]",
@@ -125,7 +126,6 @@
 						errors:			""
 					}) }} #}
 				</div>
-
 			</div>
 
 			<div class="method method-time">
@@ -145,8 +145,9 @@
 				</div>
 
 				{% set elapsedTime = plugin.getMethodOption('elapsedTime') %}
+				{% set istimeset = plugin.isMethodSet('time') %}
 
-				<div class="sub-settings" {% if not elapsedTime %}style="display:none;"{% endif %}>
+				<div class="sub-settings" {% if istimeset is sameas(false) %}style="display:none;"{%else %}style="display:block;"{% endif %}>
 					{# Should only display if using FULL or TIME captcha methods #}
 					{{ forms.textField({
 						id:				"methodOptions[elapsedTime]",

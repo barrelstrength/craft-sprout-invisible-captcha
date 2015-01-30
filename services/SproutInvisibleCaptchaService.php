@@ -497,7 +497,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	{
 		return $this->settings->methodOptions;
 	}
-	
+	 
 	//--------------------------------------------------------------------------------
 	
 	public function isMethodSet($methodName)

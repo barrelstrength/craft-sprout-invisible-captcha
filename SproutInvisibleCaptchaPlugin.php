@@ -146,8 +146,10 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 			return $event;
 		});
 
+		$self = $this;
+		
 		// Support for displayForm() tag Invisible Captcha output via Hook (if enabled)
-		craft()->templates->hook('sproutForms.modifyForm', function(&$context)
+		craft()->templates->hook('sproutForms.modifyForm', function(&$context) use($self)
 		{	
 			if ($this->getSettings()->sproutFormsDisplayFormTagOutput) 
 			{	

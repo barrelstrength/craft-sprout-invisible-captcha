@@ -114,7 +114,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	//----------------------------------------------------------------
 	// @=HOOKS
 	//----------------------------------------------------------------
-	
+
 	/**
 	 * Adds support for Sprout Forms front-end field
 	 * @return class name
@@ -147,12 +147,12 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		});
 
 		$self = $this;
-		
+
 		// Support for displayForm() tag Invisible Captcha output via Hook (if enabled)
 		craft()->templates->hook('sproutForms.modifyForm', function(&$context) use($self)
-		{	
-			if ($this->getSettings()->sproutFormsDisplayFormTagOutput) 
-			{	
+		{
+			if ($self->getSettings()->sproutFormsDisplayFormTagOutput)
+			{
 				return craft()->sproutInvisibleCaptcha->getProtection();
 			}
 		});

@@ -27,7 +27,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	public $honeypotMethodFailed = 0;
 	public $timeMethodFailed = 0;
 	public $duplicateMethodFailed = 0;
-	public $jscheckMethodFailed = 0;
+	public $jsCheckMethodFailed = 0;
 	
 	protected $settings;
 	
@@ -247,7 +247,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		return craft()->sproutInvisibleCaptcha_timeMethod->verifySubmission() 
 				&& craft()->sproutInvisibleCaptcha_originMethod->verifySubmission() 
 				&& craft()->sproutInvisibleCaptcha_duplicateMethod->verifySubmission()
-				&& craft()->sproutInvisibleCaptcha_jscheckMethod->verifySubmission() 
+				&& craft()->sproutInvisibleCaptcha_jsCheckMethod->verifySubmission() 
 				&& craft()->sproutInvisibleCaptcha_honeypotMethod->verifySubmission();
 	}
 	
@@ -318,7 +318,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 			$attributes['duplicateMethodFailed']   = $this->duplicateMethodFailed;
 			$attributes['honeypotMethodFailed'] = $this->honeypotMethodFailed;
 			$attributes['timeMethodFailed']     = $this->timeMethodFailed;
-			$attributes['jscheckMethodFailed']     = $this->jscheckMethodFailed;
+			$attributes['jsCheckMethodFailed']     = $this->jsCheckMethodFailed;
 			
 			$model->setAttributes($attributes);
 			
@@ -389,7 +389,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		craft()->sproutInvisibleCaptcha_originMethod->getField() . 
 		craft()->sproutInvisibleCaptcha_honeypotMethod->getField() . 
 		craft()->sproutInvisibleCaptcha_duplicateMethod->getField() .
-		craft()->sproutInvisibleCaptcha_jscheckMethod->getField();
+		craft()->sproutInvisibleCaptcha_jsCheckMethod->getField();
 	}
 	
 	//-------------------------------------------------------------------------------

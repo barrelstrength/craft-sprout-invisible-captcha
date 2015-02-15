@@ -10,7 +10,8 @@ class SproutInvisibleCaptcha_LogModel extends BaseModel
 			'timeMethodFailed'      => array(AttributeType::Bool),
 			'honeypotMethodFailed'  => array(AttributeType::Bool),
 			'originMethodFailed'    => array(AttributeType::Bool),
-			'duplicateMethodFailed'    => array(AttributeType::Bool),
+			'duplicateMethodFailed' => array(AttributeType::Bool),
+			'jsCheckMethodFailed'   => array(AttributeType::Bool),
 			'postData'							=> array(AttributeType::Mixed),
 			'ipAddress'							=> array(AttributeType::String)
 		);

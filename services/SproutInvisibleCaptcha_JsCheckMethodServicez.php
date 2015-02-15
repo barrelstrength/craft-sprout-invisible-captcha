@@ -17,7 +17,7 @@ class SproutInvisibleCaptcha_JscheckMethodService extends BaseApplicationCompone
 		else
 		{
 			// If there is no token, set to fail; javascript is not present
-			craft()->sproutInvisibleCaptcha->duplicateMethodFailed = 1;
+			craft()->sproutInvisibleCaptcha->jsCheckMethodFailed = 1;
 			return false;
 		}
 	}
@@ -28,17 +28,19 @@ class SproutInvisibleCaptcha_JscheckMethodService extends BaseApplicationCompone
 		$form_token = uniqid();
 
 		// Create session variable to test for javascript
-		$_SESSION['form_js'] = $form_token;		
+		craft()->httpSession->add('form_js', $form_token);
 
 		return $this->getField();
 	}
 
 	public function getField()
-	{			 
+	{	
+		$jsCheck = craft()->httpSession->get('form_js');
+
 		// Set a hidden field with no value and use javascript to set it.
 		$output = '';		
 		$output .= sprintf('<input type="hidden" id="__JSCHK" name="__JSCHK" />');
-		$output .= sprintf('<script type="text/javascript">document.getElementById("__JSCHK").value = "%s";</script>', $_SESSION['form_js']); 
+		$output .= sprintf('<script type="text/javascript">document.getElementById("__JSCHK").value = "%s";</script>', $jsCheck); 
  		
 		return $output;
 	}

@@ -26,6 +26,8 @@ class SproutInvisibleCaptcha_TimeMethodService extends BaseApplicationComponent 
 		}
 		else
 		{
+			SproutInvisibleCaptchaPlugin::log("A form submission failed because the form was submitted too quickly. Minimum seconds required: " . $min . " Form submitted in: " . $diff " seconds", LogLevel::Info, true);
+
 			craft()->sproutInvisibleCaptcha->timeMethodFailed = 1;
 			return false;
 		}

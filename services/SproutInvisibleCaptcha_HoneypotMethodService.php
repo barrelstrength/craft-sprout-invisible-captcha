@@ -27,6 +27,8 @@ class SproutInvisibleCaptcha_HoneypotMethodService extends BaseApplicationCompon
 		// The honeypot field must be left blank
 		if ( $honeypotValue = craft()->request->getPost($honeypotFieldName) ) 
 		{
+			SproutInvisibleCaptchaPlugin::log("A form submission failed the Honeypot test.", LogLevel::Info, true);
+
 			craft()->sproutInvisibleCaptcha->honeypotMethodFailed = 1;
 			return false;			
 		}

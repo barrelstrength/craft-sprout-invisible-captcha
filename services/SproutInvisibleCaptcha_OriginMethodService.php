@@ -10,12 +10,19 @@ class SproutInvisibleCaptcha_OriginMethodService extends BaseApplicationComponen
 		$uahome = craft()->request->getPost('__UAHOME');
 
 		// Run a user agent check
-		if ( ! $uahash || $uahash != $this->getUaHash() ) {
+		if ( ! $uahash || $uahash != $this->getUaHash() ) 
+		{
+			SproutInvisibleCaptchaPlugin::log("A form submission failed because the the user agent did not match.", LogLevel::Info, true);
+
+			craft()->sproutInvisibleCaptcha->originMethodFailed = 1;
 			return false;
 		}
 
 		// Run originating domain check
-		if ( ! $uahome || $uahome != $this->getDomainHash() ) {
+		if ( ! $uahome || $uahome != $this->getDomainHash() ) 
+		{
+			SproutInvisibleCaptchaPlugin::log("A form submission failed because the domain did not match.", LogLevel::Info, true);
+
 			craft()->sproutInvisibleCaptcha->originMethodFailed = 1;
 			return false;
 		}

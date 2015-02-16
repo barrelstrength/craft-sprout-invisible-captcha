@@ -16,6 +16,8 @@ class SproutInvisibleCaptcha_JavascriptMethodService extends BaseApplicationComp
 		}		 
 		else
 		{
+			SproutInvisibleCaptchaPlugin::log("A form submission failed because the user did not have Javascript enabled.", LogLevel::Info, true);
+
 			// If there is no token, set to fail; javascript is not present
 			craft()->sproutInvisibleCaptcha->javascriptMethodFailed = 1;
 			return false;

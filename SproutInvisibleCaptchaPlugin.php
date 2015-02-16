@@ -66,11 +66,9 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		return array(
 			'captchaMethod'	=> array( AttributeType::String, 'default' => 'full'),
 			'methodOptions'	=> array( AttributeType::Mixed, 'default' => array(
-				'elapsedTime' => 5,
-				'honeypotFieldName' => 'abcdefxyz',
+				'elapsedTime' => 3,
+				'honeypotFieldName' => 'beesknees',
 				'honeypotScreenReaderMessage' => 'Leave this field blank',
-				'honeypotRequireJavascript' => false,
-				'formKeyDuration' => 3600
 			)),
 			'logFailedSubmissions' => array( AttributeType::String ),
 			'sproutFormsDisplayFormTagOutput' => array( AttributeType::Bool ),

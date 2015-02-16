@@ -389,11 +389,11 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	
 	public function getFullProtection()
 	{
-		return craft()->sproutInvisibleCaptcha_timeMethod->getField() . 
-		craft()->sproutInvisibleCaptcha_originMethod->getField() . 
-		craft()->sproutInvisibleCaptcha_honeypotMethod->getField() . 
-		craft()->sproutInvisibleCaptcha_duplicateMethod->getField() .
-		craft()->sproutInvisibleCaptcha_javascriptMethod->getField();
+		return craft()->sproutInvisibleCaptcha_timeMethod->getProtection() . 
+		craft()->sproutInvisibleCaptcha_originMethod->getProtection() . 
+		craft()->sproutInvisibleCaptcha_honeypotMethod->getProtection() . 
+		craft()->sproutInvisibleCaptcha_duplicateMethod->getProtection() .
+		craft()->sproutInvisibleCaptcha_javascriptMethod->getProtection();
 	}
 	
 	//-------------------------------------------------------------------------------

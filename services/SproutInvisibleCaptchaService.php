@@ -17,10 +17,14 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	const METHOD_DUPLICATE_STRING = 'DUPLICATE';
 	const METHOD_JAVASCRIPT_STRING = 'JAVASCRIPT';
 	
-	protected $methodMap = array(self::METHOD_FULL => self::METHOD_FULL_STRING, 
-		self::METHOD_TIME => self::METHOD_TIME_STRING, self::METHOD_ORIGIN => self::METHOD_ORIGIN_STRING, 
-		self::METHOD_HONEYPOT => self::METHOD_HONEYPOT_STRING, self::METHOD_DUPLICATE => self::METHOD_DUPLICATE_STRING,
-		self::METHOD_JAVASCRIPT => self::METHOD_JAVASCRIPT_STRING);
+	protected $methodMap = array(
+		self::METHOD_FULL => self::METHOD_FULL_STRING, 
+		self::METHOD_TIME => self::METHOD_TIME_STRING, 
+		self::METHOD_ORIGIN => self::METHOD_ORIGIN_STRING, 
+		self::METHOD_HONEYPOT => self::METHOD_HONEYPOT_STRING, 
+		self::METHOD_DUPLICATE => self::METHOD_DUPLICATE_STRING,
+		self::METHOD_JAVASCRIPT => self::METHOD_JAVASCRIPT_STRING
+	);
 	
 	// Used to record failed submissions when logging is enabled
 	public $originMethodFailed = 0;
@@ -389,7 +393,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		craft()->sproutInvisibleCaptcha_originMethod->getField() . 
 		craft()->sproutInvisibleCaptcha_honeypotMethod->getField() . 
 		craft()->sproutInvisibleCaptcha_duplicateMethod->getField() .
-		craft()->sproutInvisibleCaptcha_javscriptMethod->getField();
+		craft()->sproutInvisibleCaptcha_javascriptMethod->getField();
 	}
 	
 	//-------------------------------------------------------------------------------

@@ -101,7 +101,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 
 		if ( in_array('time', $methodArray) && in_array('origin', $methodArray) 
 			&& in_array('honeypot', $methodArray) && in_array('duplicate', $methodArray)
-			&& in_array('jscheck', $methodArray)  ) 
+			&& in_array('javascript', $methodArray)  ) 
 		{
 			$methodString = 'full';
 		} 

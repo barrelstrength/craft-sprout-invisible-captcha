@@ -1,7 +1,7 @@
 <?php
 namespace Craft;
 
-class SproutInvisibleCaptcha_JscheckMethodService extends BaseApplicationComponent implements SproutInvisibleCaptcha_MethodInterfaceService
+class SproutInvisibleCaptcha_JavascriptMethodService extends BaseApplicationComponent implements SproutInvisibleCaptcha_MethodInterfaceService
 {
 	public function verifySubmission()
 	{		
@@ -17,7 +17,7 @@ class SproutInvisibleCaptcha_JscheckMethodService extends BaseApplicationCompone
 		else
 		{
 			// If there is no token, set to fail; javascript is not present
-			craft()->sproutInvisibleCaptcha->jsCheckMethodFailed = 1;
+			craft()->sproutInvisibleCaptcha->javascriptMethodFailed = 1;
 			return false;
 		}
 	}

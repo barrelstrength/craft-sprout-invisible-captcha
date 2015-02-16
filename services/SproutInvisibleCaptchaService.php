@@ -312,13 +312,13 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 			// Log our rejected submission so we can see what's being blocked
 			$model = new SproutInvisibleCaptcha_LogModel();
 			
-			$attributes['postData']             = json_encode($_POST);
-			$attributes['ipAddress']            = $_SERVER["REMOTE_ADDR"];
-			$attributes['originMethodFailed']   = $this->originMethodFailed;
-			$attributes['duplicateMethodFailed']   = $this->duplicateMethodFailed;
-			$attributes['honeypotMethodFailed'] = $this->honeypotMethodFailed;
-			$attributes['timeMethodFailed']     = $this->timeMethodFailed;
-			$attributes['javascriptMethodFailed']     = $this->javascriptMethodFailed;
+			$attributes['postData']               = json_encode($_POST);
+			$attributes['ipAddress']              = $_SERVER["REMOTE_ADDR"];
+			$attributes['originMethodFailed']     = $this->originMethodFailed;
+			$attributes['duplicateMethodFailed']  = $this->duplicateMethodFailed;
+			$attributes['honeypotMethodFailed']   = $this->honeypotMethodFailed;
+			$attributes['timeMethodFailed']       = $this->timeMethodFailed;
+			$attributes['javascriptMethodFailed'] = $this->javascriptMethodFailed;
 			
 			$model->setAttributes($attributes);
 			

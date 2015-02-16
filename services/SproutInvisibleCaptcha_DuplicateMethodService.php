@@ -5,10 +5,10 @@ class SproutInvisibleCaptcha_DuplicateMethodService extends BaseApplicationCompo
 {
 	public function verifySubmission()
 	{		
-		if(isset($_SESSION['form_token']))
+		if(craft()->httpSession->get('invisibleCaptchaDuplicateId'))
 		{	
 			// If there is a valid unique token set, unset it and return true.		
-			unset($_SESSION['form_token']);		
+			craft()->httpSession->remove('invisibleCaptchaDuplicateId');		
 			return true;			
 		}		 
 		else
@@ -22,10 +22,10 @@ class SproutInvisibleCaptcha_DuplicateMethodService extends BaseApplicationCompo
 	public function getProtection()
 	{	 						
 		// Create the unique token 
-		$form_token = uniqid();
+		$uniqueId = uniqid();
 
 		// Create session variable
-		$_SESSION['form_token'] = $form_token;		
+		craft()->httpSession->add('invisibleCaptchaDuplicateId', $uniqueId);
 
 		return $this->getField();
 	}

@@ -11,7 +11,7 @@ class SproutInvisibleCaptcha_JavascriptMethodService extends BaseApplicationComp
 		{	
 			// If there is a valid unique token set, unset it and return true.
 			// This token was created and set by javascript.		
-			unset($_SESSION['form_js']);		
+			craft()->httpSession->remove('invisibleCaptchaJavascriptId');		
 			return true;			
 		}		 
 		else
@@ -25,17 +25,17 @@ class SproutInvisibleCaptcha_JavascriptMethodService extends BaseApplicationComp
 	public function getProtection()
 	{	 						
 		// Create the unique token 
-		$form_token = uniqid();
+		$uniqueId = uniqid();
 
 		// Create session variable to test for javascript
-		craft()->httpSession->add('form_js', $form_token);
+		craft()->httpSession->add('invisibleCaptchaJavascriptId', $uniqueId);
 
 		return $this->getField();
 	}
 
 	public function getField()
 	{	
-		$jsCheck = craft()->httpSession->get('form_js');
+		$jsCheck = craft()->httpSession->get('invisibleCaptchaJavascriptId');
 
 		// Set a hidden field with no value and use javascript to set it.
 		$output = '';		

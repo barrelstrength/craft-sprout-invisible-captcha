@@ -14,13 +14,6 @@ Sprout Invisible Captcha Updates
 http://sprout.barrelstrengthdesign.com/craft-plugins/invisible-captcha/updates
 
 
-Sprout Invisible Captcha Translations
-------------------------------------------------------------
-A default translation file is provided on GitHub and can be modified 
-as needed for your language requirements.
-https://github.com/BarrelStrength/Craft-SproutInvisibleCaptcha/blob/master/translations/en_us.php
-
-
 Sprout Invisible Captcha
 ------------------------------------------------------------
 

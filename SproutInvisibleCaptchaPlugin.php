@@ -189,30 +189,20 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 			return $event;
 		});
 
-		// @TODO - Add support for User Registration
-		// Support User Registration
-		// craft()->on('users.onBeforeSaveUser', function(Event $event) {
+        // Support User Registration
+        craft()->on('users.onBeforeSaveUser', function(Event $event) {
+            $event->performAction = craft()->sproutInvisibleCaptcha->verifySubmission(true);
 
-		// 	$isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
+            if (!$event->performAction)
+            {
+                if (craft()->request->getPost('redirectOnFailure') != "")
+                {
+                    $_POST['redirect'] = craft()->request->getPost('redirectOnFailure');
+                }
+            }
 
-		// 	if (!$isValid) 
-		// 	{
-		// 		if (craft()->request->getPost('redirectOnFailure') != "") 
-		// 		{
-		// 			$url = craft()->request->getPost('redirectOnFailure');
-		// 		}
-		// 		else
-		// 		{
-		// 			$url = craft()->request->getPost('redirect');
-		// 		}
-
-		// 		// craft()->request->redirect($url);
-
-		// 		// $route = craft()->urlManager->parseUrl(craft()->request);
-		// 		// craft()->runController($route);
-		// 		// craft()->end();
-		// 	}
-		// });
+            return $event;
+        });
 	}
 
 	/**

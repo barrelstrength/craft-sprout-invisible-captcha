@@ -157,14 +157,15 @@
 
 <hr>
 
-<h3>Log failed submissions in the database</h3>
+<h3>Enable Member Registration Protection</h3>
+<p>Automatically add Invisible Captcha support for front-end Member Registrations.</p>
 
 {{ forms.lightswitch({
 	onLabel:  "On",
 	offLabel: "Off",
-	name:     "logFailedSubmissions",
-	on:       (settings.logFailedSubmissions is defined) 
-	? settings.logFailedSubmissions 
+	name:     "protectMemberRegistrations",
+	on:       (settings.protectMemberRegistrations is defined) 
+	? settings.protectMemberRegistrations 
 	: ""
 }) }}
 
@@ -179,6 +180,19 @@
 	name:     "sproutFormsDisplayFormTagOutput",
 	on:       (settings.sproutFormsDisplayFormTagOutput is defined) 
 	? settings.sproutFormsDisplayFormTagOutput 
+	: ""
+}) }}
+
+<hr>
+
+<h3>Log failed submissions in the database</h3>
+
+{{ forms.lightswitch({
+	onLabel:  "On",
+	offLabel: "Off",
+	name:     "logFailedSubmissions",
+	on:       (settings.logFailedSubmissions is defined) 
+	? settings.logFailedSubmissions 
 	: ""
 }) }}
 

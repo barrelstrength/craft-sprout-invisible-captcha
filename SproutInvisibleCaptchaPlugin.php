@@ -38,76 +38,77 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	{
 			// 'redirectOnFailure' and 'onSuccessRedirect' will cause a redirect directly from the service;
 			// we want to know the status instead, so we'll temporarily disable this by unsetting these vars
-			$onSuccessRedirect = craft()->request->getPost('onSuccessRedirect');
-			$redirectOnFailure = craft()->request->getPost('redirectOnFailure');
-			$redirect = craft()->request->getPost('redirect');
-			unset($_POST['onSuccessRedirect']);
-			unset($_POST['redirectOnFailure']);	    
-			unset($_POST['redirect']);
-			
-			if ( ! $this->sproutFormsPrePost()) {
+		$onSuccessRedirect = craft()->request->getPost('onSuccessRedirect');
+		$redirectOnFailure = craft()->request->getPost('redirectOnFailure');
+		$redirect = craft()->request->getPost('redirect');
+		unset($_POST['onSuccessRedirect']);
+		unset($_POST['redirectOnFailure']);	    
+		unset($_POST['redirect']);
+
+		if ( ! $this->sproutFormsPrePost()) {
 					$event->isValid = false; // problem
-			} else {
+				} else {
 					$event->isValid = true; // all good
-			}
-			
+				}
+
 			// put things back where we found them, just in case
-			$_POST['onSuccessRedirect'] = $onSuccessRedirect;
-			$_POST['redirectOnFailure'] = $redirectOnFailure;	
-			$_POST['redirect']          = $redirect;
-			
-			return $event;
-	}
+				$_POST['onSuccessRedirect'] = $onSuccessRedirect;
+				$_POST['redirectOnFailure'] = $redirectOnFailure;	
+				$_POST['redirect']          = $redirect;
+
+				return $event;
+			}
 
 	//------------------------------------------------------------
 
-	public function defineSettings()
-	{
-		return array(
-			'captchaMethod'	=> array( AttributeType::String, 'default' => 'full'),
-			'methodOptions'	=> array( AttributeType::Mixed, 'default' => array(
-				'elapsedTime' => 3,
-				'honeypotFieldName' => 'beesknees',
-				'honeypotScreenReaderMessage' => 'Leave this field blank',
-			)),
-			'logFailedSubmissions' => array( AttributeType::String ),
-			'sproutFormsDisplayFormTagOutput' => array( AttributeType::Bool ),
-		);
-	}
+			public function defineSettings()
+			{
+				return array(
+					'captchaMethod'	=> array( AttributeType::String, 'default' => 'full'),
+					'methodOptions'	=> array( AttributeType::Mixed, 'default' => array(
+						'elapsedTime' => 3,
+						'honeypotFieldName' => 'beesknees',
+						'honeypotScreenReaderMessage' => 'Leave this field blank',
+						)),
+					'logFailedSubmissions' => array( AttributeType::String ),
+					'protectMemberRegistrations' => array( AttributeType::Bool ),
+					'sproutFormsDisplayFormTagOutput' => array( AttributeType::Bool ),
+					);
+			}
 
 	//------------------------------------------------------------
 
-	public function getSettingsHtml()
-	{
-		return craft()->templates->render('sproutinvisiblecaptcha/_cp/settings', array(
-			'settings' => $this->getSettings()
-		));
-	}
+			public function getSettingsHtml()
+			{
+				return craft()->templates->render('sproutinvisiblecaptcha/_cp/settings', array(
+					'settings' => $this->getSettings()
+					));
+			}
 
-	public function prepSettings($settings)
-	{
-		// Check if there is any selection made in options menu.	
-		if(!isset($settings['captchaMethod']))
-		{
-			$settings['captchaMethod'] = 'none';
-			return $settings;
-		}	
+			public function prepSettings($settings)
+			{
+				// Check if there is any selection made in options menu.	
+				if(!isset($settings['captchaMethod']))
+				{
+					$settings['captchaMethod'] = 'none';
+					return $settings;
+				}	
 
-		// If options are selected continue
-		$methodArray = $settings['captchaMethod'];
-		$methodString = implode('|', $methodArray);
+				// If options are selected continue
+				$methodArray = $settings['captchaMethod'];
+				$methodString = implode('|', $methodArray);
 
-		if ( in_array('time', $methodArray) && in_array('origin', $methodArray) 
-			&& in_array('honeypot', $methodArray) && in_array('duplicate', $methodArray)
-			&& in_array('javascript', $methodArray)  ) 
-		{
-			$methodString = 'full';
-		} 
+				if ( in_array('time', $methodArray) && in_array('origin', $methodArray) 
+					&& in_array('honeypot', $methodArray) && in_array('duplicate', $methodArray)
+					&& in_array('javascript', $methodArray)  ) 
+				{
+					$methodString = 'full';
+				} 
 
-		$settings['captchaMethod'] = $methodString;
- 
-		return $settings;
-	}
+				$settings['captchaMethod'] = $methodString;
+
+				return $settings;
+			}
 
 	//----------------------------------------------------------------
 	// @=HOOKS
@@ -129,6 +130,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	{
 		// Support Sprout Forms plugin
 		craft()->on('sproutForms.beforeSaveEntry', function(SproutForms_OnBeforeSaveEntryEvent $event) {
+			
 			$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
 
 			if (!$event->isValid) 
@@ -176,33 +178,42 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		craft()->on('guestEntries.beforeSave', function(GuestEntriesEvent $event) {
 			$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
 
-			if (!$event->isValid) 
+			if (!$event->isValid)
 			{
 				$event->fakeIt = true;
 
-				if (craft()->request->getPost('redirectOnFailure') != "") 
+				if (craft()->request->getPost('redirectOnFailure') != "")
 				{
 					$_POST['redirect'] = craft()->request->getPost('redirectOnFailure');
 				}
 			}
-			
+
 			return $event;
 		});
 
-        // Support User Registration
-        craft()->on('users.onBeforeSaveUser', function(Event $event) {
-            $event->performAction = craft()->sproutInvisibleCaptcha->verifySubmission(true);
+		// Support User Registration
+		craft()->on('users.onBeforeSaveUser', function(Event $event) {
+			
+			// For some reason, using $this->settings causes an error 
+			// on our server. PHP version?  Error: Using $this when not in object context
+			// @todo - Update this to use shorter syntax
+			$settings = craft()->plugins->getPlugin('sproutinvisiblecaptcha')->getSettings();
 
-            if (!$event->performAction)
-            {
-                if (craft()->request->getPost('redirectOnFailure') != "")
-                {
-                    $_POST['redirect'] = craft()->request->getPost('redirectOnFailure');
-                }
-            }
+			if ($settings->protectMemberRegistrations)
+			{	
+				$event->performAction = craft()->sproutInvisibleCaptcha->verifySubmission(true);
+				
+				if (!$event->performAction)
+				{	
+					if (craft()->request->getPost('redirectOnFailure') != "")
+					{
+						$_POST['redirect'] = craft()->request->getPost('redirectOnFailure');
+					}
+				}
+			}
 
-            return $event;
-        });
+			return $event;
+		});
 	}
 
 	/**
@@ -240,7 +251,6 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 				break;
 			
 			default:
-				# code...
 				break;
 		}
 		

@@ -151,6 +151,12 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	 */
 	public function verifySubmission($returnResult = false)
 	{
+		// Only do this on the front-end
+		if (craft()->request->isCpRequest()) 
+		{
+			return true;
+		}
+
 		// 1. Get the request instance (aliasing)
 		$req = craft()->request;
 		
@@ -160,25 +166,27 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 			return $this->rejectSubmission($returnResult);
 		}
 		
-		// If a method is not set, assume we are not using Invisible captcha
-		// Craft Contact Form and Guest Entries run the on event each time
+		// If a method is not set, grab our settings anyway
+		// because, why is someone running verifySubmission if they haven't set a method!?
 		// @TODO - review this workflow
 		if (!$req->getPost('__METHOD'))
-			return $this->approveSubmission($returnResult);
+		{
+			$method = $this->getMethodIds();
+		}
+		else
+		{
+			// Otherwise, get it from our post
+			$method = $req->getPost('__METHOD'); // Pipe delimited list: 1|2|3|4
+		}
 		
-		
-		// 3. Figure out what validation method we need to run
-		$method = $req->getPost('__METHOD'); // Pipe delimited list: 1|2|3|4
-
 		// Array of methods: array('full') | array('time', 'origin', 'honeypot', 'duplicate', 'javscript')
 		$method = $this->getValidationMethods($method); 
 
-		
 		// 4. No __METHOD no validation
 		if($method)
 		{
 			if ($this->spammySubmission($method) == True) 
-			{
+			{	
 				return $this->rejectSubmission($returnResult);
 			}
 		}
@@ -264,33 +272,42 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		$methods   = array();
 		$methodMap = $this->getMethodMap();
 		
-		if (is_string($methodString)) {
-			if (stripos($methodString, '|') !== false) {
+		if (is_string($methodString))
+		{
+			if (stripos($methodString, '|') !== false) 
+			{
 				$methodsUsed = array_map('trim', explode('|', $methodString)); // 1|2|3|4
-			} else {
+			}
+			else
+			{
 				$methodsUsed = array(
 					$methodString
 				);
 			}
-		} else {
+		}
+		else 
+		{
 			$methodsUsed = $methodString;
 		}
 		
-		foreach ($methodsUsed as $methodKey) {
-			if ($methodKey <= 0 || $methodKey > count($methodMap)) {
+		foreach ($methodsUsed as $methodKey) 
+		{
+			if ($methodKey <= 0 || $methodKey > count($methodMap)) 
+			{
 				throw new \Exception('Please ensure you are using validation methods properly @ ' . __METHOD__);
 			}
 			
-			if ($methodKey == self::METHOD_FULL) {
+			if ($methodKey == self::METHOD_FULL) 
+			{
 				return array(
 					self::METHOD_FULL_STRING
 				);
 			}
 			
-			if (array_key_exists($methodKey, $methodMap)) {
+			if (array_key_exists($methodKey, $methodMap)) 
+			{
 				$methods[] = $methodMap[$methodKey];
 			}
-			
 		}
 		
 		// Be cautious
@@ -402,32 +419,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	
 	public function getMethodField($methodName = self::METHOD_FULL_STRING)
 	{
-		$methods = array();
-		
-		if (is_array($methodName)) 
-		{
-			foreach ($methodName as $name) 
-			{
-				if (in_array(strtoupper($name), $this->getMethodMap())) 
-				{
-					$methods[] = $this->getMethodId($name);
-				}
-			}
-			
-			$method = implode('|', $methods);
-		} 
-		else 
-		{
-			$method = $this->getMethodId($methodName);
-			
-			return sprintf('<input type="hidden" id="__METHOD" name="__METHOD" value="%s" />', $method);
-		}
-		
-		// Keep output on __METHOD relevant
-		if (in_array(self::METHOD_FULL, $methods)) 
-		{
-			$method = self::METHOD_FULL;
-		}
+		$method = $this->getMethodIds($methodName);
 		
 		return sprintf('<input type="hidden" id="__METHOD" name="__METHOD" value="%s" />', $method);
 	}
@@ -476,6 +468,42 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		}
 		
 		return false;
+	}
+
+	//--------------------------------------------------------------------------------
+	
+	public function getMethodIds($methodName = self::METHOD_FULL_STRING)
+	{
+		$methods = array();
+		
+		if (is_array($methodName)) 
+		{
+			foreach ($methodName as $name) 
+			{
+				if (in_array(strtoupper($name), $this->getMethodMap())) 
+				{
+					$methods[] = $this->getMethodId($name);
+				}
+			}
+			
+			$method = implode('|', $methods);
+		} 
+		else 
+		{
+			$method = $this->getMethodId($methodName);
+		}
+		
+		// Keep output on __METHOD relevant
+		if (in_array(self::METHOD_FULL, $methods)) 
+		{
+			$method = self::METHOD_FULL;
+		}
+
+		// return a string so we can standardize our variable.
+		// When the method value is submitted from a front-end form
+		// it is a string, when we call this method directly, it is a integer
+		// We should probably improve on this!
+		return (string)$method;
 	}
 	
 	//--------------------------------------------------------------------------------

@@ -3,9 +3,8 @@ namespace Craft;
 
 class SproutInvisibleCaptcha_TimeMethodService extends BaseApplicationComponent implements SproutInvisibleCaptcha_MethodInterfaceService
 {
-
 	// Fallback in seconds
-	const MIN_ELAPSED_TIME = 5; 
+	const MIN_ELAPSED_TIME = 2;
 	
 	// Compare elapsed time between GET and POST requests
 	public function verifySubmission()
@@ -19,7 +18,8 @@ class SproutInvisibleCaptcha_TimeMethodService extends BaseApplicationComponent 
 
 		// Flag it as a spammy submission based on time
 		// @TODO: May convert the minElapsedTime into a global setting
-		$verified = (bool) ($diff > $min );
+		$verified = (bool) ($diff > $min);
+
 		if ($verified)
 		{
 			return true;

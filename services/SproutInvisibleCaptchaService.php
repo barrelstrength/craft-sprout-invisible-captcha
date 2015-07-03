@@ -60,11 +60,15 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		{
 			$method = $this->getSavedMethod();
 		}
-		
+
 		$output  = '';
 		$method  = strtoupper(trim($method));
-		$methods = array();
-		
+
+		if ($method === 'NONE')
+		{
+			return false;
+		}
+
 		// Optimize for full protection
 		if (is_string($method) && $method == self::METHOD_FULL_STRING) 
 		{
@@ -93,7 +97,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 			
 			// Optimize for single method
 			if (is_string($method) && strlen($method)) 
-			{                
+			{
 				$output .= $this->getServiceProtection($method);
 				$output .= $this->getMethodField($method);
 			}
@@ -269,6 +273,7 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 	
 	public function getValidationMethods($methodString = self::METHOD_FULL)
 	{
+
 		$methods   = array();
 		$methodMap = $this->getMethodMap();
 		

@@ -8,6 +8,11 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		return Craft::t('Sprout Invisible Captcha');
 	}
 
+	public function getDescription()
+	{
+		return 'User-friendly form protection from vile spam and evil robots.';
+	}
+
 	public function getVersion()
 	{
 		return '0.7.0';
@@ -21,6 +26,16 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	public function getDeveloperUrl()
 	{
 		return 'http://barrelstrengthdesign.com';
+	}
+
+	public function getDocumentationUrl()
+	{
+		return "http://sprout.barrelstrengthdesign.com/craft-plugins/invisible-captcha/docs";
+	}
+
+	public function getReleaseFeedUrl()
+	{
+		return 'http://sprout.barrelstrengthdesign.com/craft-plugins/invisible-captcha/releases.json';
 	}
 
 	public function hasCpSection()

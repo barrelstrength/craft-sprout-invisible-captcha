@@ -13,6 +13,7 @@ class SproutInvisibleCaptcha_JavascriptMethodService extends BaseApplicationComp
 			if (strpos($key, '__JSCHK') === 0)
 			{
 				$jsset = $_POST[$key];
+				break;
 			}
 		}
 

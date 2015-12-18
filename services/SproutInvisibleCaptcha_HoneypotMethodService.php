@@ -15,22 +15,22 @@ class SproutInvisibleCaptcha_HoneypotMethodService extends BaseApplicationCompon
 		{
 			$length = strlen($honeypotFieldName);
 
-			foreach (craft()->request->getPost() as $key => $value) 
-			{	
-				if (substr($key, 0, $length) === $honeypotFieldName) 
-				{	
+			foreach (craft()->request->getPost() as $key => $value)
+			{
+				if (substr($key, 0, $length) === $honeypotFieldName)
+				{
 					$honeypotFieldName = $key;
 				}
 			}
 		}
-		
+
 		// The honeypot field must be left blank
-		if ( $honeypotValue = craft()->request->getPost($honeypotFieldName) ) 
+		if ( $honeypotValue = craft()->request->getPost($honeypotFieldName) )
 		{
 			SproutInvisibleCaptchaPlugin::log("A form submission failed the Honeypot test.", LogLevel::Info, true);
 
 			craft()->sproutInvisibleCaptcha->honeypotMethodFailed = 1;
-			return false;			
+			return false;
 		}
 
 		return true;
@@ -48,13 +48,13 @@ class SproutInvisibleCaptcha_HoneypotMethodService extends BaseApplicationCompon
 		$honeypotScreenReaderMessage = craft()->sproutInvisibleCaptcha->getMethodOption('honeypotScreenReaderMessage');
 		$honeypotRequireJavascript = craft()->sproutInvisibleCaptcha->getMethodOption('honeypotRequireJavascript');
 		$formKeyDuration = craft()->sproutInvisibleCaptcha->getMethodOption('formKeyDuration');
-		
+
 		$dummyValue = $this->randomString();
 		$honeypotKey = "";
-		
+
 		$honeypot = '
 <div id="'.$honeypotFieldName.'_wrapper">
-<label>'.$honeypotScreenReaderMessage.'</label>
+<label for="'.$honeypotFieldName.'">'.$honeypotScreenReaderMessage.'</label>
 <input type="text" id="'.$honeypotFieldName.'" name="'.$honeypotFieldName.'" value="" />
 </div>
 <style>#'.$honeypotFieldName.'_wrapper{display:none;}</style>';
@@ -64,7 +64,7 @@ class SproutInvisibleCaptcha_HoneypotMethodService extends BaseApplicationCompon
 
 	/**
 	 * Generate a random string
-	 * 
+	 *
 	 * http://salman-w.blogspot.com/2009/06/generate-random-strings-using-php.html
 	 * @return string random
 	 */
@@ -73,18 +73,18 @@ class SproutInvisibleCaptcha_HoneypotMethodService extends BaseApplicationCompon
 			$characterSetArray = array();
 
 			$characterSetArray[] = array(
-				'count' => 10, 
+				'count' => 10,
 				'characters' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 			);
 			$characterSetArray[] = array(
-				'count' => 5, 
+				'count' => 5,
 				'characters' => '0123456789'
 			);
 
 			$tempArray = array();
-			foreach ($characterSetArray as $characterSet) 
+			foreach ($characterSetArray as $characterSet)
 			{
-					for ($i = 0; $i < $characterSet['count']; $i++) 
+					for ($i = 0; $i < $characterSet['count']; $i++)
 					{
 							$tempArray[] = $characterSet['characters'][rand(0, strlen($characterSet['characters']) - 1)];
 					}

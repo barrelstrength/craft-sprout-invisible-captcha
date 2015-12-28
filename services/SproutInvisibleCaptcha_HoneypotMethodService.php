@@ -24,8 +24,19 @@ class SproutInvisibleCaptcha_HoneypotMethodService extends BaseApplicationCompon
 			}
 		}
 
+		$honeypotValue = null;
+		foreach($_POST as $key => $value)
+		{
+			// Fix issue on multiple forms on same page
+			if (strpos($key, $honeypotFieldName) === 0)
+			{
+				$honeypotValue = $_POST[$key];
+				break;
+			}
+		}
+
 		// The honeypot field must be left blank
-		if ( $honeypotValue = craft()->request->getPost($honeypotFieldName) )
+		if ( $honeypotValue )
 		{
 			SproutInvisibleCaptchaPlugin::log("A form submission failed the Honeypot test.", LogLevel::Info, true);
 
@@ -51,13 +62,15 @@ class SproutInvisibleCaptcha_HoneypotMethodService extends BaseApplicationCompon
 
 		$dummyValue = $this->randomString();
 		$honeypotKey = "";
+		// Create the unique token
+		$uniqueId = $honeypotFieldName.'_'.uniqid();
 
 		$honeypot = '
-<div id="'.$honeypotFieldName.'_wrapper">
-<label for="'.$honeypotFieldName.'">'.$honeypotScreenReaderMessage.'</label>
-<input type="text" id="'.$honeypotFieldName.'" name="'.$honeypotFieldName.'" value="" />
+<div id="'.$uniqueId.'_wrapper">
+<label for="'.$uniqueId.'">'.$honeypotScreenReaderMessage.'</label>
+<input type="text" id="'.$uniqueId.'" name="'.$uniqueId.'" value="" />
 </div>
-<style>#'.$honeypotFieldName.'_wrapper{display:none;}</style>';
+<style>#'.$uniqueId.'_wrapper{display:none;}</style>';
 
 		return $honeypot;
 	}

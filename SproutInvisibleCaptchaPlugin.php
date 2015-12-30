@@ -15,7 +15,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-		return '0.8.1';
+		return '0.8.2';
 	}
 
 	public function getSchemaVersion()
@@ -47,10 +47,10 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Contact form handler
-	 * 
+	 *
 	 * @param ContactFormEvent $event
 	 * @return void
 	 */
@@ -153,14 +153,14 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	{
 		// Support Sprout Forms plugin
 		craft()->on('sproutForms.beforeSaveEntry', function(SproutForms_OnBeforeSaveEntryEvent $event) {
-			
+
 			$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
 
-			if (!$event->isValid) 
+			if (!$event->isValid)
 			{
 				$event->fakeIt = true;
 
-				if (craft()->request->getPost('redirectOnFailure') != "") 
+				if (craft()->request->getPost('redirectOnFailure') != "")
 				{
 					$_POST['redirect'] = craft()->request->getPost('redirectOnFailure');
 				}
@@ -184,11 +184,11 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		craft()->on('contactForm.beforeSend', function(ContactFormEvent $event) {
 			$event->isValid = craft()->sproutInvisibleCaptcha->verifySubmission(true);
 
-			if (!$event->isValid) 
+			if (!$event->isValid)
 			{
 				$event->fakeIt = true;
 
-				if (craft()->request->getPost('redirectOnFailure') != "") 
+				if (craft()->request->getPost('redirectOnFailure') != "")
 				{
 					$_POST['redirect'] = craft()->request->getPost('redirectOnFailure');
 				}
@@ -217,17 +217,17 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		// Support User Registration
 		craft()->on('users.onBeforeSaveUser', function(Event $event) {
 
-			// For some reason, using $this->settings causes an error 
+			// For some reason, using $this->settings causes an error
 			// on our server. PHP version?  Error: Using $this when not in object context
 			// @todo - Update this to use shorter syntax
 			$settings = craft()->plugins->getPlugin('sproutinvisiblecaptcha')->getSettings();
-			
+
 			if ($settings->protectMemberRegistrations && $event->params['isNewUser'])
-			{	
+			{
 				$event->performAction = craft()->sproutInvisibleCaptcha->verifySubmission(true);
-				
+
 				if (!$event->performAction)
-				{	
+				{
 					if (craft()->request->getPost('redirectOnFailure') != "")
 					{
 						$_POST['redirect'] = craft()->request->getPost('redirectOnFailure');
@@ -242,7 +242,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	/**
 	 * @DEPRECATED - Setup Invisible Captcha to work with Sprout Forms
 	 * Use sproutForms.onBeforeSubmitForm Event instead
-	 * 
+	 *
 	 * @return true or redirect Allow form to post if clear, otherwise redirect
 	 */
 	public function sproutFormsPrePost()
@@ -273,10 +273,10 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 				$useInvisibleCaptcha = true;
 				break;
 		}
-		
+
 		if ($useInvisibleCaptcha == true)
 		{
-			return craft()->sproutInvisibleCaptcha->verifySubmission();	
-		}	
+			return craft()->sproutInvisibleCaptcha->verifySubmission();
+		}
 	}
 }

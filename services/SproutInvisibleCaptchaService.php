@@ -593,4 +593,35 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 		return new \Twig_Markup($content, (string) $charset);
 	}
 
+	/*
+	 * getInvisibleCaptchaField()
+	 *
+	 * @param string $form
+	 */
+	public function getInvisibleCaptchaField($form, $sproutFormsSupport = false)
+	{
+		// If sproutFormsDisplayFormTagOutput is enabled we don't need validate any field
+		if(!$sproutFormsSupport)
+		{
+			$tabs = $form->getFieldLayout()->getTabs();
+
+			foreach ($tabs as $tab)
+			{
+				$layoutFields = $tab->getFields();
+
+				foreach ($layoutFields as $layoutField)
+				{
+					$field = $layoutField->getField()->getFieldType();
+					$class = get_class($field);
+					if (get_class($field) === 'Craft\\SproutInvisibleCaptcha_InvisibleCaptchaFieldType')
+					{
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
 }

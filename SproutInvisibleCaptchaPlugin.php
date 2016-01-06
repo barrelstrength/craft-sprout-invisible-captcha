@@ -151,6 +151,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	 */
 	public function init()
 	{
+		Craft::import('plugins.sproutinvisiblecaptcha.integrations.sproutforms.fields.*');
 		// Support Sprout Forms plugin
 		craft()->on('sproutForms.beforeSaveEntry', function(SproutForms_OnBeforeSaveEntryEvent $event) {
 
@@ -174,7 +175,10 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		// Support for displayForm() tag Invisible Captcha output via Hook (if enabled)
 		craft()->templates->hook('sproutForms.modifyForm', function(&$context) use($self)
 		{
-			if ($self->getSettings()->sproutFormsDisplayFormTagOutput)
+			$sproutFormsSupport  = $self->getSettings()->sproutFormsDisplayFormTagOutput;
+			$hasInvisibleCatpcha = craft()->sproutInvisibleCaptcha->getInvisibleCaptchaField($context['form'], $sproutFormsSupport);
+
+			if ($sproutFormsSupport || $hasInvisibleCatpcha)
 			{
 				return craft()->sproutInvisibleCaptcha->getProtection();
 			}
@@ -278,5 +282,15 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		{
 			return craft()->sproutInvisibleCaptcha->verifySubmission();
 		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public function registerSproutFormsFields()
+	{
+		return array(
+			new SproutInvisibleCaptchaInvisibleCaptchaField()
+		);
 	}
 }

@@ -15,7 +15,7 @@ class SproutInvisibleCaptchaVariable
 
 	/**
 	 * Output our captcha options on the page
-	 * 
+	 *
 	 * @param string $methodString Captcha method
 	 * @return mixed Invisible Captcha output
 	 */
@@ -26,9 +26,9 @@ class SproutInvisibleCaptchaVariable
 
 	/**
 	 * @DEPRECATED - This function has been replaced by the protect() function
-	 * 
+	 *
 	 * Output our captcha options on the page
-	 * 
+	 *
 	 * @param string $methodString Captcha method
 	 * @return mixed Invisible Captcha output
 	 */

@@ -15,6 +15,7 @@ class SproutInvisibleCaptchaInvisibleCaptchaField extends SproutInvisibleCaptcha
 		return 'SproutInvisibleCaptcha_InvisibleCaptcha';
 	}
 
+
 	public function isPlainInput()
 	{
 		return true;

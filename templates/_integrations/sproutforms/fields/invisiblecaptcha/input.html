@@ -1,1 +1,3 @@
-{# html output handle by the 'sproutForms.modifyForm' hook #}
+{% if not craft.sproutinvisiblecaptcha.hasSproutFormsSupport() %}
+	{{ craft.sproutinvisiblecaptcha.protect() }}
+{% endif %}

@@ -51,4 +51,11 @@ class SproutInvisibleCaptchaVariable
 	{
 		return craft()->sproutInvisibleCaptcha->hasMethodOption($option);
 	}
+
+	public function hasSproutFormsSupport()
+	{
+		$settings = craft()->plugins->getPlugin('sproutinvisiblecaptcha')->getSettings();
+
+		return $settings->sproutFormsDisplayFormTagOutput;
+	}
 }

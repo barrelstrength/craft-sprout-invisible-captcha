@@ -151,6 +151,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	 */
 	public function init()
 	{
+		Craft::import('plugins.sproutinvisiblecaptcha.integrations.sproutforms.fields.*');
 		// Support Sprout Forms plugin
 		craft()->on('sproutForms.beforeSaveEntry', function(SproutForms_OnBeforeSaveEntryEvent $event) {
 
@@ -278,5 +279,15 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 		{
 			return craft()->sproutInvisibleCaptcha->verifySubmission();
 		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public function registerSproutFormsFields()
+	{
+		return array(
+			new SproutInvisibleCaptchaInvisibleCaptchaField()
+		);
 	}
 }

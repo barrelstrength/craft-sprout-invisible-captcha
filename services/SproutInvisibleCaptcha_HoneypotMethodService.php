@@ -66,11 +66,10 @@ class SproutInvisibleCaptcha_HoneypotMethodService extends BaseApplicationCompon
 		$uniqueId = $honeypotFieldName.'_'.uniqid();
 
 		$honeypot = '
-<div id="'.$uniqueId.'_wrapper">
+<div id="'.$uniqueId.'_wrapper" style="display:none;">
 <label for="'.$uniqueId.'">'.$honeypotScreenReaderMessage.'</label>
 <input type="text" id="'.$uniqueId.'" name="'.$uniqueId.'" value="" />
-</div>
-<style>#'.$uniqueId.'_wrapper{display:none;}</style>';
+</div>';
 
 		return $honeypot;
 	}

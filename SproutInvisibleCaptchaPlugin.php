@@ -87,7 +87,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 	public function defineSettings()
 	{
 		return array(
-			'captchaMethod'	=> array( AttributeType::String, 'default' => 'full'),
+			'captchaMethod'	=> array( AttributeType::String, 'default' => 'origin|duplicate|javascript|honeypot'),
 			'methodOptions'	=> array( AttributeType::Mixed, 'default' => array(
 				'elapsedTime' => 3,
 				'honeypotFieldName' => 'beesknees',

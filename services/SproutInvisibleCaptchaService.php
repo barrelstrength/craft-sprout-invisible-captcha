@@ -170,17 +170,12 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 			return $this->rejectSubmission($returnResult);
 		}
 
-		// If a method is not set, grab our settings anyway
-		// because, why is someone running verifySubmission if they haven't set a method!?
-		// @TODO - review this workflow
-		if (!$req->getPost('__METHOD'))
+		// Pipe delimited list: 1|2|3|4
+		$method = $req->getPost('__METHOD');
+
+		if (!$method)
 		{
-			$method = $this->getMethodIds();
-		}
-		else
-		{
-			// Otherwise, get it from our post
-			$method = $req->getPost('__METHOD'); // Pipe delimited list: 1|2|3|4
+			return true;
 		}
 
 		// Array of methods: array('full') | array('time', 'origin', 'honeypot', 'duplicate', 'javscript')
@@ -279,7 +274,6 @@ class SproutInvisibleCaptchaService extends BaseApplicationComponent
 
 	public function getValidationMethods($methodString = self::METHOD_FULL)
 	{
-
 		$methods   = array();
 		$methodMap = $this->getMethodMap();
 

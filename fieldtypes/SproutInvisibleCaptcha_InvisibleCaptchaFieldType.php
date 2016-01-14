@@ -35,7 +35,7 @@ class SproutInvisibleCaptcha_InvisibleCaptchaFieldType extends BaseFieldType
 			'value'    => $value,
 			'settings' => $this->getSettings()
 		);
-		//sproutinvisiblecaptcha/_fields/input
+
 		return craft()->templates->render('sproutinvisiblecaptcha/_fieldtypes/invisiblecaptcha/input', $vars);
 	}
 

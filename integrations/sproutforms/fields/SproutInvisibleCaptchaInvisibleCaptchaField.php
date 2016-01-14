@@ -4,7 +4,7 @@ namespace Craft;
 /**
  *
  */
-class SproutInvisibleCaptchaInvisibleCaptchaField extends SproutInvisibleCaptchaBaseField
+class SproutInvisibleCaptchaInvisibleCaptchaField extends SproutFormsBaseField
 {
 
 	/**
@@ -14,7 +14,6 @@ class SproutInvisibleCaptchaInvisibleCaptchaField extends SproutInvisibleCaptcha
 	{
 		return 'SproutInvisibleCaptcha_InvisibleCaptcha';
 	}
-
 
 	public function isPlainInput()
 	{
@@ -55,6 +54,14 @@ class SproutInvisibleCaptchaInvisibleCaptchaField extends SproutInvisibleCaptcha
 		$this->endRendering();
 
 		return TemplateHelper::getRaw($rendered);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTemplatesPath()
+	{
+		return craft()->path->getPluginsPath().'sproutinvisiblecaptcha/templates/_integrations/sproutforms/fields/';
 	}
 
 }

@@ -1,0 +1,2 @@
+# Sprout Invisible Captcha Changelog
+

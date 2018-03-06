@@ -1,0 +1,40 @@
+{
+    "name": "barrelstrength/sprout-invisible-captcha",
+    "description": "Invisible Captcha for Sprout Forms",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "sprout invisible captcha"
+    ],
+    "support": {
+        "email": "sprout@barrelstrengthdesign.com",
+        "issues": "https://github.com/barrelstrength/sprout-invisible-captcha/issues?state=open",
+        "source": "https://github.com/barrelstrength/sprout-invisible-captcha",
+        "docs": "https://sprout.barrelstrengthdesign.com/craft-plugins/invisible-captcha/docs",
+        "rss": "https://github.com/barrelstrength/sprout-invisible-captcha/commits/v2.atom"
+    },
+    "require": {
+        "craftcms/cms": "^3.0.0-RC1",
+        "barrelstrength/sprout-forms": "^3.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "barrelstrength\\sproutinvisiblecaptcha\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Sprout Invisible Captcha",
+        "handle": "sprout-invisible-captcha",
+        "schemaVersion": "3.0.0",
+        "developer": "Barrel Strength",
+        "developerUrl": "https://barrelstrengthdesign.com",
+        "documentationUrl": "https://sprout.barrelstrengthdesign.com/craft-plugins/invisible-captcha",
+        "changelogUrl": "https://raw.githubusercontent.com/BarrelStrength/sprout-invisible-captcha/master/CHANGELOG.md",
+        "downloadUrl": "https://github.com/BarrelStrength/sprout-invisible-captcha/archive/master.zip",
+        "class": "barrelstrength\\sproutinvisiblecaptcha\\SproutInvisibleCaptcha"
+    }
+}

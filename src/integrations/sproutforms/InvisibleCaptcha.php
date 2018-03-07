@@ -24,7 +24,9 @@ class InvisibleCaptcha extends BaseCaptcha
 
     /**
      * Verify Submission
+     *
      * @param $event
+     *
      * @return boolean
      */
     public function verifySubmission(OnBeforeSaveEntryEvent $event): bool
@@ -32,6 +34,18 @@ class InvisibleCaptcha extends BaseCaptcha
         // Only do this on the front-end
         if (Craft::$app->getRequest()->getIsCpRequest()) {
             return true;
+        }
+
+        $event->isValid = SproutInvisibleCaptcha::$app->javascript->verifySubmission();
+
+        if (!$event->isValid) {
+            $event->fakeIt = true;
+
+            if (Craft::$app->getRequest()->getBodyParam('redirectOnFailure') != "") {
+                $_POST['redirect'] = Craft::$app->getRequest()->getBodyParam('redirectOnFailure');
+            }
+
+            return false;
         }
 
         return true;

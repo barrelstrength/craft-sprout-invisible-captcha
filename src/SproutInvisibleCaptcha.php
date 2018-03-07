@@ -12,7 +12,8 @@ use yii\base\Event;
 
 /**
  * Class SproutInvisibleCaptcha
- */
+ *
+*/
 class SproutInvisibleCaptcha extends Plugin
 {
    /**

@@ -2,7 +2,7 @@
 /**
  * Sprout Invisible Captcha plugin for Craft CMS 3.x
  *
- * Google Recaptcha solution for Sprout Forms
+ * Invisible Captcha solution for Sprout Forms
  *
  * @link      https://www.barrelstrengthdesign.com/
  * @copyright Copyright (c) 2018 Barrel Strength
@@ -41,13 +41,14 @@ class Javascript extends Component implements MethodInterface
             // This token was created and set by javascript.
             Craft::$app->getSession()->remove('invisibleCaptchaJavascriptId');
             return true;
-        } else {
-            Craft::error("A form submission failed because the user did not have Javascript enabled.",  __METHOD__);
-
-            // If there is no token, set to fail; javascript is not present
-            SproutInvisibleCaptcha::$app->javascriptMethodFailed = 1;
-            return false;
         }
+
+        Craft::error("A form submission failed because the user did not have Javascript enabled.",  __METHOD__);
+
+        // If there is no token, set to fail; javascript is not present
+        SproutInvisibleCaptcha::$app->javascriptMethodFailed = 1;
+
+        return false;
     }
 
     /**

@@ -35,9 +35,6 @@
         "documentationUrl": "https://sprout.barrelstrengthdesign.com/craft-plugins/invisible-captcha",
         "changelogUrl": "https://raw.githubusercontent.com/BarrelStrength/sprout-invisible-captcha/master/CHANGELOG.md",
         "downloadUrl": "https://github.com/BarrelStrength/sprout-invisible-captcha/archive/master.zip",
-        "class": "barrelstrength\\sproutinvisiblecaptcha\\SproutInvisibleCaptcha",
-        "components": {
-            "app": "barrelstrength\\sproutinvisiblecaptcha\\services\\App"
-        }
+        "class": "barrelstrength\\sproutinvisiblecaptcha\\SproutInvisibleCaptcha"
     }
 }

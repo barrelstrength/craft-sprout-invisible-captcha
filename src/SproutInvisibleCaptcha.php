@@ -3,11 +3,10 @@
 namespace barrelstrength\sproutinvisiblecaptcha;
 
 
+use barrelstrength\sproutbase\base\BaseSproutTrait;
 use barrelstrength\sproutforms\services\Forms;
-use barrelstrength\sproutinvisiblecaptcha\integrations\sproutforms\InvisibleCaptcha;
-use barrelstrength\sproutinvisiblecaptcha\services\App;
+use barrelstrength\sproutinvisiblecaptcha\integrations\sproutforms\JavascriptCaptcha;
 use craft\base\Plugin;
-use Craft;
 use yii\base\Event;
 
 /**
@@ -16,10 +15,14 @@ use yii\base\Event;
 */
 class SproutInvisibleCaptcha extends Plugin
 {
-   /**
-     * @var SproutInvisibleCaptcha
+    use BaseSproutTrait;
+
+    /**
+     * Identify our plugin for BaseSproutTrait
+     *
+     * @var string
      */
-    public static $app;
+    public static $pluginId = 'sprout-invisible-captcha';
 
     /**
      * @var string
@@ -33,14 +36,8 @@ class SproutInvisibleCaptcha extends Plugin
     {
         parent::init();
 
-        $this->setComponents([
-            'app' => App::class
-        ]);
-
-        self::$app = $this->get('app');
-
         Event::on(Forms::class, Forms::EVENT_REGISTER_CAPTCHAS, function(Event $event) {
-            $event->types[] = InvisibleCaptcha::class;
+            $event->types[] = JavascriptCaptcha::class;
         });
     }
 

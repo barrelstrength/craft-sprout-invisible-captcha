@@ -1,0 +1,99 @@
+<?php
+
+namespace barrelstrength\sproutinvisiblecaptcha\integrations\sproutforms;
+
+use barrelstrength\sproutforms\contracts\BaseCaptcha;
+use barrelstrength\sproutforms\events\OnBeforeSaveEntryEvent;
+use barrelstrength\sproutinvisiblecaptcha\SproutInvisibleCaptcha;
+use Craft;
+
+/**
+ * Class InvisibleCaptcha
+ */
+class JavascriptCaptcha extends BaseCaptcha
+{
+    public function getName()
+    {
+        return 'Invisible Captcha';
+    }
+
+    public function getCaptchaHtml()
+    {
+        // Create the unique token
+        $uniqueId = uniqid();
+
+        // Create session variable to test for javascript
+        Craft::$app->getSession()->set('invisibleCaptchaJavascriptId', $uniqueId);
+
+        return $this->getField();
+    }
+
+    /**
+     * Verify Submission
+     *
+     * @param $event
+     *
+     * @return boolean
+     */
+    public function verifySubmission(OnBeforeSaveEntryEvent $event): bool
+    {
+        // Only do this on the front-end
+        if (Craft::$app->getRequest()->getIsCpRequest()) {
+            return true;
+        }
+
+        $jsset = null;
+
+        foreach ($_POST as $key => $value) {
+            // Fix issue on multiple forms on same page
+            if (strpos($key, '__JSCHK') === 0) {
+                $jsset = $_POST[$key];
+                break;
+            }
+        }
+
+        if (strlen($jsset) > 0) {
+            // If there is a valid unique token set, unset it and return true.
+            // This token was created and set by javascript.
+            Craft::$app->getSession()->remove('invisibleCaptchaJavascriptId');
+            return true;
+        }
+
+        SproutInvisibleCaptcha::error('A form submission failed because the user did not have Javascript enabled.');
+
+        // If there is no token, set to fail; javascript is not present
+        SproutInvisibleCaptcha::$app->javascriptMethodFailed = 1;
+
+        $event->isValid = SproutInvisibleCaptcha::$app->javascript->verifySubmission();
+
+        if (!$event->isValid) {
+            $event->fakeIt = true;
+
+            if (Craft::$app->getRequest()->getBodyParam('redirectOnFailure') != "") {
+                $_POST['redirect'] = Craft::$app->getRequest()->getBodyParam('redirectOnFailure');
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return string
+     */
+    private function getField()
+    {
+        $jsCheck = Craft::$app->getSession()->get('invisibleCaptchaJavascriptId');
+
+        // Set a hidden field with no value and use javascript to set it.
+        $output = '';
+        $output .= sprintf('<input type="hidden" id="__JSCHK_%s" name="__JSCHK_%s" />', $jsCheck, $jsCheck);
+        $output .= sprintf('<script type="text/javascript">document.getElementById("__JSCHK_%s").value = "%s";</script>', $jsCheck, $jsCheck);
+
+        return $output;
+    }
+}
+
+
+

@@ -52,21 +52,9 @@ class JavascriptCaptcha extends BaseCaptcha
             }
         }
 
-        if (strlen($jsset) > 0) {
-            // If there is a valid unique token set, unset it and return true.
-            // This token was created and set by javascript.
-            Craft::$app->getSession()->remove('invisibleCaptchaJavascriptId');
-            return true;
-        }
-
-        SproutInvisibleCaptcha::error('A form submission failed because the user did not have Javascript enabled.');
-
-        // If there is no token, set to fail; javascript is not present
-        SproutInvisibleCaptcha::$app->javascriptMethodFailed = 1;
-
-        $event->isValid = SproutInvisibleCaptcha::$app->javascript->verifySubmission();
-
-        if (!$event->isValid) {
+        if (empty($jsset)) {
+            SproutInvisibleCaptcha::error('A form submission failed because the user did not have Javascript enabled.');
+            $event->isValid = false;
             $event->fakeIt = true;
 
             if (Craft::$app->getRequest()->getBodyParam('redirectOnFailure') != "") {
@@ -76,6 +64,9 @@ class JavascriptCaptcha extends BaseCaptcha
             return false;
         }
 
+        // If there is a valid unique token set, unset it and return true.
+        // This token was created and set by javascript.
+        Craft::$app->getSession()->remove('invisibleCaptchaJavascriptId');
         return true;
     }
 

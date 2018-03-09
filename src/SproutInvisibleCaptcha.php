@@ -5,6 +5,7 @@ namespace barrelstrength\sproutinvisiblecaptcha;
 
 use barrelstrength\sproutbase\base\BaseSproutTrait;
 use barrelstrength\sproutforms\services\Forms;
+use barrelstrength\sproutinvisiblecaptcha\integrations\sproutforms\HoneypotCaptcha;
 use barrelstrength\sproutinvisiblecaptcha\integrations\sproutforms\JavascriptCaptcha;
 use craft\base\Plugin;
 use yii\base\Event;
@@ -38,6 +39,7 @@ class SproutInvisibleCaptcha extends Plugin
 
         Event::on(Forms::class, Forms::EVENT_REGISTER_CAPTCHAS, function(Event $event) {
             $event->types[] = JavascriptCaptcha::class;
+            $event->types[] = HoneypotCaptcha::class;
         });
     }
 

@@ -12,9 +12,14 @@ use Craft;
  */
 class JavascriptCaptcha extends BaseCaptcha
 {
+    public function getDescription()
+    {
+        return Craft::t('sprout-invisible-captcha','Prevent a form from being submmitted if a user does not have JavaScript enabled');
+    }
+
     public function getName()
     {
-        return 'Invisible Captcha';
+        return 'Javascript Captcha';
     }
 
     public function getCaptchaHtml()

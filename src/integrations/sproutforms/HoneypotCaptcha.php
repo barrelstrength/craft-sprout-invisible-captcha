@@ -27,6 +27,11 @@ class HoneypotCaptcha extends BaseCaptcha
         return 'Honeypot Captcha';
     }
 
+    public function getDescription()
+    {
+        return Craft::t('sprout-invisible-captcha','Block form submissions by robots who auto-fill all of your form fields ');
+    }
+
     public function getCaptchaHtml()
     {
         return $this->getField();

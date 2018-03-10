@@ -116,11 +116,11 @@ class HoneypotCaptcha extends BaseCaptcha
         // Create the unique token
         $uniqueId = $this->honeypotFieldName.'_'.uniqid();
 
-        $honeypot = trim('
-        <div id="'.$uniqueId.'_wrapper" style="display:none;">
-        <label for="'.$uniqueId.'">'.$this->honeypotScreenReaderMessage.'</label>
-        <input type="text" id="'.$uniqueId.'" name="'.$uniqueId.'" value="" />
-        </div>');
+        $honeypot = '
+<div id="'.$uniqueId.'_wrapper" style="display:none;">
+<label for="'.$uniqueId.'">'.$this->honeypotScreenReaderMessage.'</label>
+<input type="text" id="'.$uniqueId.'" name="'.$uniqueId.'" value="" />
+ </div>';
 
         return $honeypot;
     }

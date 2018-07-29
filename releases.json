@@ -1,0 +1,98 @@
+[
+  {
+    "version": "0.9.0",
+    "downloadUrl": "https://github.com/barrelstrength/craft-sprout-invisible-captcha/archive/v0.9.0.zip",
+    "date": "2018-07-28T08:00:00+00:00",
+    "notes": [
+      "[Improved] Moved release feed to Github"
+    ]
+  },
+  {
+    "version": "0.8.3",
+    "downloadUrl": "https://github.com/barrelstrength/craft-sprout-invisible-captcha/releases",
+    "date": "2016-01-13T23:18:00+00:00",
+    "notes": [
+      "[Improved] Removed Invisible Captcha field",
+      "[Fixed] Fixed HTML5 validation error"
+    ]
+  },
+  {
+    "version": "0.8.2",
+    "downloadUrl": "https://github.com/barrelstrength/craft-sprout-invisible-captcha/releases",
+    "date": "2015-12-31T11:00:00+00:00",
+    "notes": [
+      "[Added] Added &quot;for&quot; attribute to the honeypot label.",
+      "[Improved] Improved logging to capture all failed validation methods, instead of just the first failed method.",
+      "[Fixed] Fixed honeypot so unique ids are generated if multiple forms appear on the same page.",
+      "[Fixed] Fixed javascript validation issue with multiple forms on the same page."
+    ]
+  },
+  {
+    "version": "0.8.1",
+    "downloadUrl": "https://github.com/barrelstrength/craft-sprout-invisible-captcha/releases",
+    "date": "2015-12-02T08:30:00+00:00",
+    "notes": [
+      "[Added] Added Schema Version"
+    ]
+  },
+  {
+    "version": "0.8.0",
+    "downloadUrl": "https://github.com/barrelstrength/craft-sprout-invisible-captcha/releases",
+    "date": "2015-12-02T08:00:00+00:00",
+    "notes": [
+      "[Added] Added Plugin icon",
+      "[Added] Added Plugin description",
+      "[Added] Added link to documentation",
+      "[Added] Added link to plugin settings",
+      "[Added] Added link to release feed",
+      "[Improved] Updated settings page display"
+    ]
+  },
+  {
+    "version": "0.7.0",
+    "downloadUrl": "https://github.com/barrelstrength/craft-sprout-invisible-captcha/releases",
+    "date": "2015-07-03T07:00:00+00:00",
+    "notes": [
+      "[Added] Added support for protection during User Registration",
+      "[Improved] Added check to make sure validation only runs on front-end",
+      "[Improved] Improved checks on whether to run validation",
+      "[Improved] Various minor design and copy updates in settings area",
+      "[Fixed] Fixed issue where validation could run even when no protection methods were selected"
+    ]
+  },
+  {
+    "version": "0.6.2",
+    "downloadUrl": "https://github.com/barrelstrength/craft-sprout-invisible-captcha/releases",
+    "date": "2015-02-18T22:00:00+00:00",
+    "notes": [
+      "[Added] Added Duplicate Submission spam protection method",
+      "[Added] Added Javascript spam protection method",
+      "[Added] Added an example of how each spam protection method can be tested",
+      "[Improved] Improved documentation on settings page",
+      "[Fixed] Fixed error that occurred in older versions of PHP",
+      "[Fixed] Fixed error that occurred when no settings are selected",
+      "[Fixed] Fixed display bug with plugin settings"
+    ]
+  },
+  {
+    "version": "0.6.0",
+    "downloadUrl": "https://github.com/barrelstrength/craft-sprout-invisible-captcha/releases",
+    "date": "2014-10-22T14:30:00+00:00",
+    "notes": [
+      "[Added] Added support for Contact Form plugin",
+      "[Added] Added support for Guest Entries plugin",
+      "[Added] Added support for Sprout Forms plugin",
+      "[Added] Added dynamic support for Sprout Forms plugin `displayForm()` tag",
+      "[Added] Added Invisible Captcha Field Type",
+      "[Added] Added Sprout Forms front-end field support"
+    ]
+  },
+  {
+    "version": "0.5.3",
+    "downloadUrl": "https://github.com/barrelstrength/craft-sprout-invisible-captcha/releases",
+    "date": "2014-01-11T20:49:00+00:00",
+    "notes": [
+      "[Added] Private Beta"
+    ]
+  }
+]

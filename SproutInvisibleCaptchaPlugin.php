@@ -15,7 +15,7 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-		return '0.8.3';
+		return '0.9.0';
 	}
 
 	public function getSchemaVersion()
@@ -35,12 +35,12 @@ class SproutInvisibleCaptchaPlugin extends BasePlugin
 
 	public function getDocumentationUrl()
 	{
-		return "http://sprout.barrelstrengthdesign.com/craft-plugins/invisible-captcha/docs";
+		return "https://github.com/barrelstrength/craft-sprout-invisible-captcha/blob/v0/README.md";
 	}
 
 	public function getReleaseFeedUrl()
 	{
-		return 'https://sprout.barrelstrengthdesign.com/craft-plugins/invisible-captcha/releases.json';
+        return 'https://raw.githubusercontent.com/barrelstrength/craft-sprout-invisible-captcha/v0/releases.json';
 	}
 
 	public function hasCpSection()

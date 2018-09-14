@@ -26,17 +26,6 @@ By default, if a submission is caught, it will be redirected to your 'redirect' 
 
 ## Invisible Captcha Methods Available
 
-**Require web-based form submissions** (Origin Method)
-
-_Explanation_: The Origin spam protection method ensures that your form is submitted from your website and not from a third-party website or a headless browser. This method implements behavior similar to CSRF tokens.
-
-_Note: This method should not have any chance for a regular user to get denied from submitting your form._
-
-_How do I test this method?_<br>
-It may not be easy to test this method for the average user. To do so, you will need to write a script that programatically submits your form with a user agent string or domain that does not match the information for those settings provided by your website. Blocked submissions will be logged in the database and can also be seen in the Invisible Captcha logs.
-
-<hr>
-
 **Prevent duplicate submissions if a user hits submit more than once** (Duplicate Submission Method)
 
 _Explanation_<br>

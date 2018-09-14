@@ -13,23 +13,6 @@
 
 <div class="field first">
 	<div class="checkbox-select">
-		<div class="method-origin">
-			
-			<label>
-				<input type="checkbox" value="origin" name="captchaMethod[]" {% if plugin.isMethodSet('origin') %}checked{% endif %}>
-				<strong>Require web-based form submissions</strong> (Origin)
-			</label> 
-			<span class="more-info">?</span>
-			<div class="note">
-
-				<p>The <b>Origin</b> spam protection method ensures that your form is submitted from your website and not from a third-party website or a headless browser. This method implements behavior similar to CSRF tokens.</p>
-
-				<p><em><b>Note:</b> This method should not have any chance for a regular user to get denied from submitting your form.</em></p>
-
-				<p><strong>How do I test this method?</strong> It may not be easy to test this method for the average user.  To do so, you will need to write a script that programatically submits your form with a user agent string or domain that does not match the information for those settings provided by your website. Blocked submissions will be logged in the database and can also be seen in the <a href="{{ cpUrl('utils/logs/sproutinvisiblecaptcha.log') }}">Invisible Captcha logs</a>.</p>
-			</div>
-
-		</div>
 		<div class="method-duplicate">
 			
 			<label>

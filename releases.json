@@ -1,7 +1,7 @@
 [
   {
       "version": "0.9.1",
-      "downloadUrl": "https://github.com/barrelstrength/craft-sprout-invisible-captcha/releases/tag/v0.9.1.zip",
+      "downloadUrl": "https://github.com/barrelstrength/craft-sprout-invisible-captcha/archive/v0.9.1.zip",
       "date": "2018-09-14T08:00:00+00:00",
       "notes": [
         "[Improved] Removed Origin captcha method"
